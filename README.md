@@ -50,6 +50,8 @@ RoundTrip classifies your Trello lists as follows:
 * done (work that has been completed during the current sprint),
 * archived (closed tickets).
 
+![Equivalence between Redmine tickets and Trello cards](https://raw.github.com/joeyates/round_trip/master/doc/redmine-trello%20state%20mapping.png) "Equivalence between Redmine tickets and Trello cards"
+
 Configuration
 =============
 
