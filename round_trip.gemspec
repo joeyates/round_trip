@@ -21,9 +21,13 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files bin`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_development_dependency 'rspec'
+  s.add_dependency 'rake'
+
+  s.add_development_dependency 'cucumber'
+  s.add_development_dependency 'json'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-doc'
+  s.add_development_dependency 'rspec'
 
   s.rubyforge_project = 'nowarning'
 end
