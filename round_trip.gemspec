@@ -21,8 +21,9 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files bin`.split("\n")
   s.require_paths = ['lib']
 
-  s.add_dependency 'rake'
   s.add_dependency 'activerecord'
+  s.add_dependency 'highline'
+  s.add_dependency 'rake'
   s.add_dependency 'sqlite3'
 
   s.add_development_dependency 'bourne'
