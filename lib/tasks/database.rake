@@ -22,7 +22,7 @@ namespace :db do
 
   task :configure_connection => :configuration do
     ActiveRecord::Base.establish_connection @config
-    ActiveRecord::Base.logger = Logger.new STDOUT if @config['logger']
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 
   desc 'Create the database from config/database.yml for the current DATABASE_ENV'
@@ -37,7 +37,6 @@ namespace :db do
 
   desc 'Migrate the database (options: VERSION=x, VERBOSE=false).'
   task :migrate => :configure_connection do
-    ActiveRecord::Migration.verbose = true
     ActiveRecord::Migrator.migrate MIGRATIONS_DIR, ENV['VERSION'] ? ENV['VERSION'].to_i : nil
   end
 
