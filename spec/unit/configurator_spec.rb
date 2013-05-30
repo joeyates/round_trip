@@ -3,11 +3,18 @@ require 'spec_helper'
 describe RoundTrip::Configurator do
   let(:database_path) { 'foo' }
   let(:database_pathname) { File.join(database_path, 'bar.sqlite3') }
+  let(:db_config) do
+    {
+      :adapter => 'sqlite3',
+      :database => database_pathname,
+    }
+  end
 
   before do
     File.stubs(:writable?).with(database_path).returns(true)
     File.stubs(:exist?).with(database_pathname).returns(true)
     File.stubs(:writable?).with(database_pathname).returns(true)
+    ActiveRecord::Base.stubs(:establish_connection).with(db_config)
   end
 
   subject { RoundTrip::Configurator.new(database_pathname) }
@@ -50,6 +57,11 @@ describe RoundTrip::Configurator do
           subject.run
         }.to raise_error(Errno::EACCES, "Permission denied - #{database_pathname}")
       end
+    end
+
+    it 'opens the database' do
+      subject.run
+      expect(ActiveRecord::Base).to have_received(:establish_connection).with(db_config)
     end
   end
 end
