@@ -1,13 +1,13 @@
 RoundTrip
 =========
 
-Bidirectional sychronisation between Redmine and Trello
+Bidirectional sychronisation between Redmine and Trello tickets.
 
-* RoundTrip keeps a Redmine project and a Trello board aligned.
-* Cards are created on Trello to match Redmine issues and vice versa.
-* Changes to ticket state on either are also reflected to the other system.
+* RoundTrip keeps a Redmine project and a Trello board aligned,
+* Cards are created on Trello to match Redmine issues and vice versa,
+* Changes to ticket state on either are copied to the other system.
 
-RoundTrip should be run as a cron job.
+RoundTrip is normally run as a cron job.
 
 Assumptions
 ===========
