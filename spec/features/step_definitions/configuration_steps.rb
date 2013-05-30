@@ -6,7 +6,7 @@ end
 # project list
 
 Given 'I already have some projects' do
-  pending
+  @projects = create_list(:project, 3)
 end
 
 Then 'I should see the list of projects' do
