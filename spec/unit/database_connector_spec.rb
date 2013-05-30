@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RoundTrip::Configurator do
+describe RoundTrip::DatabaseConnector do
   let(:database_path) { 'foo' }
   let(:database_pathname) { File.join(database_path, 'bar.sqlite3') }
   let(:db_config) do
@@ -17,12 +17,12 @@ describe RoundTrip::Configurator do
     ActiveRecord::Base.stubs(:establish_connection).with(db_config)
   end
 
-  subject { RoundTrip::Configurator.new(database_pathname) }
+  subject { RoundTrip::DatabaseConnector.new(database_pathname) }
 
-  describe '.run' do
+  describe '#connect' do
     context 'permissions' do
       it 'checks the database path is writable' do
-        subject.run
+        subject.connect
         expect(File).to have_received(:writable?).with(database_path)
       end
 
@@ -30,23 +30,23 @@ describe RoundTrip::Configurator do
         File.stubs(:writable?).with(database_path).returns(false)
 
         expect {
-          subject.run
+          subject.connect
         }.to raise_error(Errno::EACCES, "Permission denied - #{database_path}")
       end
 
       it 'checks if the database file exists' do
-        subject.run
+        subject.connect
         expect(File).to have_received(:exist?).with(database_pathname)
       end
 
       it 'checks the database is writable if it exists' do
-        subject.run
+        subject.connect
         expect(File).to have_received(:writable?).with(database_pathname)
       end
 
       it "doesn't check if the database is writable if it doesn't exist" do
         File.stubs(:exist?).with(database_pathname).returns(false)
-        subject.run
+        subject.connect
         expect(File).to have_received(:writable?).with(database_pathname).never
       end
 
@@ -54,13 +54,13 @@ describe RoundTrip::Configurator do
         File.stubs(:writable?).with(database_pathname).returns(false)
 
         expect {
-          subject.run
+          subject.connect
         }.to raise_error(Errno::EACCES, "Permission denied - #{database_pathname}")
       end
     end
 
     it 'opens the database' do
-      subject.run
+      subject.connect
       expect(ActiveRecord::Base).to have_received(:establish_connection).with(db_config)
     end
   end
