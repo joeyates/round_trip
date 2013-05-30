@@ -74,3 +74,12 @@ Start a synchorinsation run as follows:
 $ round_trip run
 ```
 
+Testing
+=======
+
+## Setup
+
+```shell
+rake db:migrate DATABASE_ENV=test
+```
+

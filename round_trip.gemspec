@@ -27,10 +27,12 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bourne'
   s.add_development_dependency 'cucumber'
+  s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'json'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-doc'
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'shoulda-matchers'
 
   s.rubyforge_project = 'nowarning'
 end
