@@ -1,3 +1,4 @@
+*.sqlite3
 /.bundle
 /coverage
 /Gemfile.lock
