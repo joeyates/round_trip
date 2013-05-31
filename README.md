@@ -71,7 +71,9 @@ $ round_trip configure
 
 For each Redmine site that you access, you will need to get a users' API key.
 
-* Go to https://THE_SITE/
+* Go to https://THE_REDMINE_SITE/my/account,
+* In the column on the right (normally), click on 'Show' under 'API access key',
+* Copy the key to the Redmine site settings.
 
 Synchorinsation
 ===============
