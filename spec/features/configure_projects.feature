@@ -24,6 +24,7 @@ Feature: Configure projects
     | Key                 | Value                       |
     | trello key          | 123stella                   |
     | trello token        | secret                      |
+    | trello board_id     | ae87d4567                   |
     | redmine url         | https://example.com/redmine |
     | redmine project_id  | 12345                       |
 

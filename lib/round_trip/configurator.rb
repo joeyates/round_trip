@@ -6,7 +6,7 @@ module RoundTrip; end
 
 class RoundTrip::Configurator
   CONFIGURATION = [
-    [:trello,  [:key, :token]],
+    [:trello,  [:key, :token, :board_id]],
     [:redmine, [:url, :key, :project_id]],
   ]
   attr_reader :high_line
