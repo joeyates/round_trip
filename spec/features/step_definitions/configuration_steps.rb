@@ -13,11 +13,11 @@ Given /^I have chosen to edit a project$/ do
   add_input_line @project.name
 end
 
-When /^I type '([\w\s]+)'$/ do |command|
+When /^I type '([^']+)'$/ do |command|
   add_input_line command
 end
 
-When /^I call the project '([\w\d\s]+)'$/ do |project_name|
+When /^I call the project '([^']+)'$/ do |project_name|
   add_input_line project_name
 end
 
