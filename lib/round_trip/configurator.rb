@@ -1,4 +1,5 @@
 require 'highline'
+require 'active_support'
 
 module RoundTrip; end
 
@@ -21,6 +22,26 @@ class RoundTrip::Configurator
     end
   end
 
+  class ProjectMenuPresenter
+    attr_reader :project
+
+    delegate :name, :name=,
+      :redmine, :redmine=,
+      :trello, :trello=, :to => :@project
+
+    def initialize(project)
+      @project = project
+    end
+
+    def to_s
+      [
+        "name: #{name}",
+        "trello key: #{trello[:key]}",
+        "trello token: #{trello[:token]}",
+      ].join("\n")
+    end
+  end
+
   class MainMenu < MenuBase
     def run
       loop do
@@ -29,7 +50,7 @@ class RoundTrip::Configurator
           menu.header = 'Choose a project'
           RoundTrip::Project.all.each do |project|
             menu.choice(project.name) do
-              ProjectEditor.new(high_line).run(project)
+              ProjectEditor.new(high_line).run(ProjectMenuPresenter.new(project))
             end
           end
           menu.choice('add a project') do
@@ -51,9 +72,13 @@ class RoundTrip::Configurator
       loop do
         system('clear')
         high_line.choose do |menu|
-          menu.header <<-EOT
-Editing '#{project}'
-          EOT
+          menu.header = project.to_s
+          menu.choice('set trello key') do
+            project.trello[:key] = high_line.ask('type the key: ')
+          end
+          menu.choice('set trello token') do
+            project.trello[:token] = high_line.ask('type the token: ')
+          end
           menu.choice('quit (q)') do
             return
           end

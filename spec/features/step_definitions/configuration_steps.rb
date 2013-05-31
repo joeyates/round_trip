@@ -53,3 +53,11 @@ Then /^'([\w_]+)' should be in the list$/ do |name|
   expect(output).to match(/\d+\. #{name}/)
 end
 
+Then /I should see '([^']+)'$/ do |text|
+  append_quit
+  @high_line_input.rewind
+  @configurator.run
+  output = @high_line_stdout.string
+  expect(output).to match(/#{text}/)
+end
+
