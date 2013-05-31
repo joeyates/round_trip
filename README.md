@@ -75,6 +75,26 @@ For each Redmine site that you access, you will need to get a users' API key.
 * In the column on the right (normally), click on 'Show' under 'API access key',
 * Copy the key to the Redmine site settings.
 
+### Trello
+
+For each Trello account that you want to access, you will need an app key and secret
+plus a user authentication token.
+
+For the app key and secret:
+
+* Go to https://trello.com/1/appKey/generate
+* Copy the 'Key' and the 'Secret'.
+
+Next, insert your app key into the following URL and paste it into a browser where
+you are logged in to Trello:
+
+```
+https://trello.com/1/authorize?key=YOU_KEY_HERE&name=RoundTrip&expiration=never&response_type=token&scope=read,write
+```
+
+That will take you to an authorization page. Click on the button to authorize RoundTrip
+and you will be presentedwith a token.
+
 Synchorinsation
 ===============
 

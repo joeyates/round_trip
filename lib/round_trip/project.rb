@@ -3,7 +3,7 @@ require 'active_record'
 class RoundTrip::Project < ActiveRecord::Base
   CONFIGURATION = [
     [:redmine, [:url, :key, :project_id]],
-    [:trello,  [:key, :token, :board_id]],
+    [:trello,  [:key, :secret, :token, :board_id]],
   ]
   include ActiveRecord::Validations
 
