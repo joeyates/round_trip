@@ -15,17 +15,13 @@ Feature: Configure projects
     And I close the program
     Then I should have seen '1. foobar' on page 2
 
-  Scenario: Edit a project - set trello key
-    And I have chosen to edit a project
-    When I type 'set trello key'
-    And I type '123stella'
-    And I close the program
-    Then I should have seen 'trello key: 123stella' on page 3
-
-  Scenario: Edit a project - set trello token
+  Scenario Outline: Edit a project
     Given I have chosen to edit a project
-    When I type 'set trello token'
-    And I type '123stella'
+    When I set <Key> to '<Value>'
     And I close the program
-    Then I should have seen 'trello token: 123stella' on page 3
+    Then I should have seen '<Key>: <Value>' on page 3
+    Examples:
+    | Key          | Value     |
+    | trello key   | 123stella |
+    | trello token | secret    |
 

@@ -25,6 +25,11 @@ When /^I call the project '([\w\d\s]+)'$/ do |project_name|
   add_input_line project_name
 end
 
+When /^I set ([\w\s]+) to '([^']+)'$/ do |key, value|
+  add_input_line "set #{key}"
+  add_input_line value
+end
+
 # Always run this!
 When 'I close the program' do
   run_configurator
