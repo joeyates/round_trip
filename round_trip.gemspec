@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files spec`.split("\n")
-  s.executables   = `git ls-files bin`.split("\n")
+  s.executables   = `git ls-files bin`.split("\n").map { |p| p[4..-1] }
   s.require_paths = ['lib']
 
   s.add_dependency 'activerecord', '>= 3.2.0'
