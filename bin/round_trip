@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+project_path = File.expand_path('..', File.basename(__FILE__))
+lib_path     = File.join(project_path, 'lib')
+$:.unshift lib_path
+
+require 'highline'
+require 'round_trip'
+
+ENVIRONMENT = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
+
+database_pathname = File.join(project_path, 'db', "#{ENVIRONMENT}.sqlite3")
+RoundTrip::DatabaseConnector.new(database_pathname).connect
+
+high_line = HighLine.new
+
+configurator = RoundTrip::Configurator.new(high_line)
+configurator.run
+
