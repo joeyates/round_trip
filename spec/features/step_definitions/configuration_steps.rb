@@ -13,10 +13,6 @@ Given /^I have chosen to edit a project$/ do
   add_input_line @project.name
 end
 
-When /^I type enter$/ do
-  add_input_line ''
-end
-
 When /^I type '([\w\s]+)'$/ do |command|
   add_input_line command
 end
