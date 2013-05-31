@@ -60,6 +60,7 @@ class RoundTrip::Configurator
             end
           end
           menu.choice('quit (q)') do
+            system('clear')
             return
           end
         end
@@ -80,6 +81,7 @@ class RoundTrip::Configurator
             project.trello[:token] = high_line.ask('type the token: ')
           end
           menu.choice('quit (q)') do
+            system('clear')
             return
           end
         end
