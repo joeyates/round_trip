@@ -22,6 +22,7 @@ Feature: Configure projects
     Then I should have seen '<Key>: <Value>' on page 3
     Examples:
     | Key                 | Value                       |
+    | name                | new_name                    |
     | trello key          | 123stella                   |
     | trello token        | secret                      |
     | trello board_id     | ae87d4567                   |

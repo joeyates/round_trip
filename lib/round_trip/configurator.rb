@@ -97,6 +97,9 @@ class RoundTrip::Configurator
         system('clear')
         high_line.choose do |menu|
           menu.header = project.to_s + "\n\nEdit a setting"
+          menu.choice('name') do
+            project.name = high_line.ask("name: ")
+          end
           project.each_configuration do |name, attribute, key, value|
             full_key_name = "#{name} #{key}"
             menu.choice(full_key_name) do
