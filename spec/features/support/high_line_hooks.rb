@@ -1,69 +1,80 @@
-module HighLineHelpers
-  def create_streams
-    @high_line_input = StringIO.new
-    @high_line_output = StringIO.new
-    @high_line_pages = []
+class HighLine::TestApp
+  # the queue of input
+  attr_reader :input
+  # the current 'page' of output
+  attr_reader :output
+  attr_reader :pages
+
+  def initialize
+    @input = StringIO.new
+    @output = StringIO.new
+    @pages = []
   end
 
-  def create_configurator
-    create_streams
-    high_line = HighLine.new(@high_line_input, @high_line_output)
-    @configurator = RoundTrip::Configurator.new(high_line)
+  def type(text)
+    @input << "#{text}\n"
   end
 
-  def add_input_line(text)
-    @high_line_input << "#{text}\n"
-  end
-
-  def push_current_page
-    @high_line_pages << @high_line_output.string
-  end
-
+  # When clear screen is issued, the current 'page' of HighLine output is
+  # pushed onto the array :pages and output is re-initialized.
   def handle_clear_screen
     push_current_page
-    @high_line_output.reopen(StringIO.new)
-  end
-  
-  def before_configurator_run
-    @high_line_input.rewind
+    @output.reopen(StringIO.new)
   end
 
-  def after_configurator_run
-    push_current_page
-    @high_line_output.close
-  end
-
-  def run_configurator
-    before_configurator_run
+  def run
+    before_run
+    high_line = HighLine.new(@input, @output)
     begin
-      @configurator.run
+      yield high_line
     rescue EOFError
-      # we don;t necessarily navigate all the way out of the program
+      # we don't necessarily navigate all the way out of the program
       # swallow errors when input stream runs out
     ensure
-      after_configurator_run
+      after_run
     end
-  end
-
-  def expect_page_to_exist(page_number)
-    page_index = page_number.to_i
-    pages = @high_line_pages.each.with_index.map { |p, i| "#{i}:\n#{p}" }.join("\n\n")
-    page_error = "Page #{page_index} does not exist.\nPages are:\n#{pages}"
-    expect(@high_line_pages.size).to be > page_index, page_error
   end
 
   def get_page(page_number)
     page_index = page_number.to_i
-    page = @high_line_pages[page_index]
+    @pages[page_index]
+  end
+
+  private
+
+  def push_current_page
+    @pages << @output.string
+  end
+
+  def before_run
+    @input.rewind
+  end
+
+  def after_run
+    push_current_page
+    @output.close
+  end
+end
+
+module HighLine::RSpecHelper
+  def create_test_app
+    @app = HighLine::TestApp.new
+  end
+
+  def expect_page_to_exist(page_number)
+    page_index = page_number.to_i
+    pages = @app.pages.each.with_index.map { |p, i| "#{i}:\n#{p}" }.join("\n\n")
+    page_error = "Page #{page_index} does not exist.\nPages are:\n#{pages}"
+    expect(@app.pages.size).to be > page_index, page_error
   end
 end
 
 Before('@highline') do
-  create_configurator
+  create_test_app
 
   # stop the configurator clearing the screen
   RoundTrip::Configurator::MenuBase.any_instance.stub(:system).with('clear') do
-    handle_clear_screen
+    @app.handle_clear_screen
   end
 end
 
