@@ -9,14 +9,14 @@ namespace :db do
   end
  
   task :environment do
-    DATABASE_ENV = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
+    ROUND_TRIP_ENVIRONMENT = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
     MIGRATIONS_DIR = ENV['MIGRATIONS_DIR'] || 'db/migrate'
   end
 
   task :configuration => :environment do
     @config = {
       :adapter => 'sqlite3',
-      :database => "db/#{DATABASE_ENV}.sqlite3",
+      :database => "db/#{ROUND_TRIP_ENVIRONMENT}.sqlite3",
     }
   end
 
@@ -25,12 +25,12 @@ namespace :db do
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 
-  desc 'Create the database from config/database.yml for the current DATABASE_ENV'
+  desc 'Create the database from config/database.yml for the current ROUND_TRIP_ENVIRONMENT'
   task :create => :configure_connection do
     `touch #{@config[:database]}` unless File.exist?(@config[:database])
   end
 
-  desc 'Drops the database for the current DATABASE_ENV'
+  desc 'Drops the database for the current ROUND_TRIP_ENVIRONMENT'
   task :drop => :configure_connection do
     ActiveRecord::Base.connection.drop_database @config['database']
   end

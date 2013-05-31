@@ -65,6 +65,14 @@ Run the configuration program as follows:
 $ round_trip configure
 ```
 
+## Sites
+
+### Redmine
+
+For each Redmine site that you access, you will need to get a users' API key.
+
+* Go to https://THE_SITE/
+
 Synchorinsation
 ===============
 
@@ -80,6 +88,6 @@ Testing
 ## Setup
 
 ```shell
-rake db:migrate DATABASE_ENV=test
+rake db:migrate ROUND_TRIP_ENVIRONMENT=test
 ```
 
