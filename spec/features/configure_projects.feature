@@ -16,7 +16,7 @@ Feature: Configure projects
     Then I should have seen '1. foobar' on page 2
 
   Scenario Outline: Edit a project
-    Given I have chosen to edit a project
+    Given I edit an existing project
     When I set <Key> to '<Value>'
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 3
@@ -27,4 +27,20 @@ Feature: Configure projects
     | trello board_id     | ae87d4567                   |
     | redmine url         | https://example.com/redmine |
     | redmine project_id  | 12345                       |
+
+  Scenario: Edit a project - save
+    Given I edit an existing project
+    When I set trello key to 'trololololo'
+    And I type 'save'
+    And I re-open the same project
+    And I close the program
+    Then I should have seen 'trello key: trololololo' on page 6
+
+  Scenario: Edit a project - quit without saving
+    Given I edit an existing project
+    When I set trello key to 'trololololo'
+    And I type 'q'
+    And I re-open the same project
+    And I close the program
+    Then I should have seen 'trello key: (unset)' on page 6
 

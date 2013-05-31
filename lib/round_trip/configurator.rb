@@ -32,14 +32,24 @@ class RoundTrip::Configurator
 
     delegate :name, :name=,
       :redmine, :redmine=,
-      :trello, :trello=, :to => :@project
+      :trello, :trello=,
+      :save!,
+      :to => :@project
 
     def initialize(project)
       @project = project
     end
 
     def to_s
-      values = ["name: #{name}"] + each_configuration { |name, _, key, v| "#{name} #{key}: #{v}" }
+      values = ["name: #{name}"] + each_configuration do |name, _, key, v|
+        value =
+          if not v.nil? and v != ''
+            v
+          else
+            '(unset)'
+          end
+        "#{name} #{key}: #{value}"
+      end
       values.join("\n")
     end
 
@@ -92,6 +102,11 @@ class RoundTrip::Configurator
             menu.choice(full_key_name) do
               attribute[key] = high_line.ask("#{full_key_name}: ")
             end
+          end
+          menu.choice('save') do
+            project.save!
+            system('clear')
+            return
           end
           menu.choice('quit (q)') do
             system('clear')

@@ -8,12 +8,16 @@ Given /^I already have (\d+) projects?$/ do |count|
   @projects = create_list(:project, count.to_i)
 end
 
-Given /^I have chosen to edit a project$/ do
+Given /^I edit an existing project$/ do
   @project = create(:project)
   @app.type @project.name
 end
 
-When /^I type '([^']+)'$/ do |command|
+Given /^I re-open the same project$/ do
+  @app.type @project.name
+end
+
+When /^I type '([^']*)'$/ do |command|
   @app.type command
 end
 
