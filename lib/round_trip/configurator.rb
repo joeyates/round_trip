@@ -1,8 +1,33 @@
 require 'highline'
 require 'active_support'
 require 'active_support/core_ext'
+require 'active_resource'
 
 module RoundTrip; end
+module RoundTrip::Redmine; end
+
+class RoundTrip::Redmine::Project < ActiveResource::Base
+  # must set
+  # * headers['X-Redmine-API-Key']
+  # * self.site
+end
+
+class RoundTrip::Redmine::ConnectionTester
+  attr_reader :config
+
+  def initialize(config)
+    @config = config
+  end
+
+  def run
+    RoundTrip::Redmine::Project.headers['X-Redmine-API-Key'] = config[:key]
+    RoundTrip::Redmine::Project.site = config[:url]
+    project = RoundTrip::Redmine::Project.find(config[:project_id])
+    [true, "It works"]
+  rescue Exception => e
+    [false, "Error: #{e.message}"]
+  end
+end
 
 class RoundTrip::Configurator
   CONFIGURATION = [
@@ -105,6 +130,10 @@ class RoundTrip::Configurator
             menu.choice(full_key_name) do
               attribute[key] = high_line.ask("#{full_key_name}: ")
             end
+          end
+          menu.choice('test connection') do
+            result, message = RoundTrip::Redmine::ConnectionTester.new(project.redmine).run
+            high_line.ask "#{message}\nPress a key... "
           end
           menu.choice('save') do
             project.save!
