@@ -9,7 +9,7 @@ namespace :db do
   end
  
   task :environment do
-    DATABASE_ENV = ENV['DATABASE_ENV'] || 'development'
+    DATABASE_ENV = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
     MIGRATIONS_DIR = ENV['MIGRATIONS_DIR'] || 'db/migrate'
   end
 

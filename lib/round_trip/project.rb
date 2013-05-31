@@ -7,6 +7,8 @@ class RoundTrip::Project < ActiveRecord::Base
   ]
   include ActiveRecord::Validations
 
+  self.table_name = 'round_trip_projects'
+
   validates_presence_of :name
 
   serialize :redmine
