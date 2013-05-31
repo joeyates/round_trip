@@ -15,7 +15,7 @@ class RoundTrip::Configurator::Menu::Project < RoundTrip::Configurator::Menu::Ba
             attribute[key] = high_line.ask("#{full_key_name}: ")
           end
         end
-        menu.choice('test connection') do
+        menu.choice('test redmine connection') do
           result, message = RoundTrip::Redmine::ConnectionTester.new(project.redmine).run
           high_line.ask "#{message}\nPress a key... "
         end
