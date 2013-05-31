@@ -22,8 +22,8 @@ When /^I call the project '([^']+)'$/ do |project_name|
 end
 
 When /^I set ([\w\s]+) to '([^']+)'$/ do |key, value|
-  add_input_line "set #{key}"
-  add_input_line value
+  add_input_line key.strip
+  add_input_line value.strip
 end
 
 # Always run this!

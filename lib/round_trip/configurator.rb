@@ -39,6 +39,7 @@ class RoundTrip::Configurator
         "name: #{name}",
         "trello key: #{trello[:key]}",
         "trello token: #{trello[:token]}",
+        "redmine url: #{redmine[:url]}",
       ].join("\n")
     end
   end
@@ -74,12 +75,15 @@ class RoundTrip::Configurator
       loop do
         system('clear')
         high_line.choose do |menu|
-          menu.header = project.to_s + "\n\nChoose an option"
-          menu.choice('set trello key') do
-            project.trello[:key] = high_line.ask('type the key: ')
+          menu.header = project.to_s + "\n\nEdit a setting"
+          menu.choice('trello key') do
+            project.trello[:key] = high_line.ask('trello key: ')
           end
-          menu.choice('set trello token') do
-            project.trello[:token] = high_line.ask('type the token: ')
+          menu.choice('trello token') do
+            project.trello[:token] = high_line.ask('trello token: ')
+          end
+          menu.choice('redmine url') do
+            project.redmine[:url] = high_line.ask('redmine url: ')
           end
           menu.choice('quit (q)') do
             system('clear')
