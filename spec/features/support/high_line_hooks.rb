@@ -25,7 +25,6 @@ module HighLineHelpers
   end
   
   def before_configurator_run
-    append_quit
     @high_line_input.rewind
   end
 
@@ -39,14 +38,11 @@ module HighLineHelpers
     begin
       @configurator.run
     rescue EOFError
+      # we don;t necessarily navigate all the way out of the program
+      # swallow errors when input stream runs out
     ensure
       after_configurator_run
     end
-  end
-
-  def append_quit
-    @high_line_input.seek(@high_line_input.length)
-    @high_line_input << "quit\n"
   end
 
   def expect_page_to_exist(page_number)
