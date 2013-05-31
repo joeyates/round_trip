@@ -48,7 +48,7 @@ module HighLineHelpers
   def expect_page_to_exist(page_number)
     page_index = page_number.to_i
     pages = @high_line_pages.each.with_index.map { |p, i| "#{i}:\n#{p}" }.join("\n\n")
-    page_error = "Page #{page_index} does not exists.\nPages are:\n#{pages}"
+    page_error = "Page #{page_index} does not exist.\nPages are:\n#{pages}"
     expect(@high_line_pages.size).to be > page_index, page_error
   end
 
