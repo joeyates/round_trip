@@ -31,7 +31,7 @@ When 'I close the program' do
   run_configurator
 end
 
-# page_number is 1--based - we get an initial clear screen at the beginning of
+# page_number is 1-based - we get an initial clear screen at the beginning of
 # the Configurator
 
 Then /^I should have seen the list of projects on page (\d+)$/ do |page_number|
