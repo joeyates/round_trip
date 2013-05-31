@@ -59,6 +59,8 @@ module HighLineHelpers
 end
 
 Before('@highline') do
+  create_configurator
+
   # stop the configurator clearing the screen
   RoundTrip::Configurator::MenuBase.any_instance.stub(:system).with('clear') do
     handle_clear_screen

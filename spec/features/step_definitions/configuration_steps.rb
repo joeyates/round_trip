@@ -4,10 +4,6 @@
 
 include HighLineHelpers
 
-Given 'I have started the configurator' do
-  create_configurator
-end
-
 Given /^I already have (\d+) projects?$/ do |count|
   @projects = create_list(:project, count.to_i)
 end
