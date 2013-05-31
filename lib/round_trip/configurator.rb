@@ -74,7 +74,7 @@ class RoundTrip::Configurator
       loop do
         system('clear')
         high_line.choose do |menu|
-          menu.header = project.to_s
+          menu.header = project.to_s + "\n\nChoose an option"
           menu.choice('set trello key') do
             project.trello[:key] = high_line.ask('type the key: ')
           end
