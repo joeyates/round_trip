@@ -78,7 +78,7 @@ class RoundTrip::Configurator
           end
           menu.choice('add a project') do
             name = high_line.ask('name: ')
-            if name.match(/^([\w\s\d]+|)$/)
+            if name.match(/^[\w\s\d]+$/)
               RoundTrip::Project.create!(:name => name)
             end
           end
