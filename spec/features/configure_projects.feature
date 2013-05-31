@@ -21,8 +21,9 @@ Feature: Configure projects
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 3
     Examples:
-    | Key          | Value                       |
-    | trello key   | 123stella                   |
-    | trello token | secret                      |
-    | redmine url  | https://example.com/redmine |
+    | Key                 | Value                       |
+    | trello key          | 123stella                   |
+    | trello token        | secret                      |
+    | redmine url         | https://example.com/redmine |
+    | redmine project_id  | 12345                       |
 

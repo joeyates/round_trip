@@ -5,6 +5,10 @@ require 'active_support/core_ext'
 module RoundTrip; end
 
 class RoundTrip::Configurator
+  CONFIGURATION = [
+    [:trello,  [:key, :token]],
+    [:redmine, [:url, :key, :project_id]],
+  ]
   attr_reader :high_line
 
   def initialize(high_line)
@@ -35,12 +39,19 @@ class RoundTrip::Configurator
     end
 
     def to_s
-      [
-        "name: #{name}",
-        "trello key: #{trello[:key]}",
-        "trello token: #{trello[:token]}",
-        "redmine url: #{redmine[:url]}",
-      ].join("\n")
+      values = ["name: #{name}"] + each_configuration { |name, _, key, v| "#{name} #{key}: #{v}" }
+      values.join("\n")
+    end
+
+    def each_configuration(&block)
+      result = []
+      CONFIGURATION.map do |attribute_name, keys|
+        attribute = project.send(attribute_name)
+        keys.map do |key|
+          result << block.call(attribute_name, attribute, key, attribute[key])
+        end
+      end
+      result
     end
   end
 
@@ -76,14 +87,11 @@ class RoundTrip::Configurator
         system('clear')
         high_line.choose do |menu|
           menu.header = project.to_s + "\n\nEdit a setting"
-          menu.choice('trello key') do
-            project.trello[:key] = high_line.ask('trello key: ')
-          end
-          menu.choice('trello token') do
-            project.trello[:token] = high_line.ask('trello token: ')
-          end
-          menu.choice('redmine url') do
-            project.redmine[:url] = high_line.ask('redmine url: ')
+          project.each_configuration do |name, attribute, key, value|
+            full_key_name = "#{name} #{key}"
+            menu.choice(full_key_name) do
+              attribute[key] = high_line.ask("#{full_key_name}: ")
+            end
           end
           menu.choice('quit (q)') do
             system('clear')
