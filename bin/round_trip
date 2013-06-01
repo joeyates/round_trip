@@ -21,9 +21,7 @@ when 'configure'
 when 'synchronise', 'synchronize'
   RoundTrip::Synchroniser.new.run
 else
-  $stderr.write <<-EOT
-usage: round_trip configure|synchronise
-  EOT
+  $stderr.write "usage: round_trip configure|synchronise\n"
   exit 1
 end
 
