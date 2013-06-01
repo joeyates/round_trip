@@ -12,8 +12,18 @@ ENVIRONMENT = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
 database_pathname = File.join(project_path, 'db', "#{ENVIRONMENT}.sqlite3")
 RoundTrip::DatabaseConnector.new(database_pathname).connect
 
-high_line = HighLine.new
+case ARGV[0]
+when 'configure'
+  high_line = HighLine.new
 
-configurator = RoundTrip::Configurator.new(high_line)
-configurator.run
+  configurator = RoundTrip::Configurator.new(high_line)
+  configurator.run
+when 'synchronise', 'synchronize'
+  RoundTrip::Synchroniser.new.run
+else
+  $stderr.write <<-EOT
+usage: round_trip configure|synchronise
+  EOT
+  exit 1
+end
 
