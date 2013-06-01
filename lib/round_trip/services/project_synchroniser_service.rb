@@ -11,8 +11,8 @@ class RoundTrip::ProjectSynchroniserService
   end
 
   def run
-    RoundTrip::RedmineDownloaderService.new(project.redmine[:project_id]).run
-    RoundTrip::TrelloDownloaderService.new(project.trello[:board_id]).run
+    RoundTrip::RedmineDownloaderService.new(project).run
+    RoundTrip::TrelloDownloaderService.new(project).run
   end
 end
 
