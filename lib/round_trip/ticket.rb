@@ -11,10 +11,10 @@ class RoundTrip::Ticket < ActiveRecord::Base
       t.datetime  :redmine_updated_on
       t.string    :trello_id
       t.string    :trello_board_id
+      t.string    :trello_list_id
       t.string    :trello_name
       t.text      :trello_desc
       t.datetime  :trello_last_activity_date
-      t.string    :trello_list_id
       t.string    :trello_url
       t.boolean   :trello_closed
 =end
