@@ -3,6 +3,11 @@ require 'active_resource'
 module RoundTrip; end
 module RoundTrip::Redmine; end
 
+=begin
+Enable logging:
+ActiveResource::Base.logger = Logger.new(STDOUT)
+=end
+
 class RoundTrip::Redmine::Resource < ActiveResource::Base
   def self.setup(url, key)
     # Before requesting resources, you must set the redmine API key
