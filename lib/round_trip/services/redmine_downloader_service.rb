@@ -19,14 +19,10 @@ class RoundTrip::RedmineDownloaderService
     issue_resources.each do |r|
       RoundTrip::Ticket.create_from_redmine_resource(r)
     end
-    RoundTrip.logger.info "#{issue_resources.size} tickets imported from Redmine project '#{project_name}' at #{url}"
+    RoundTrip.logger.info "#{issue_resources.size} tickets imported from Redmine project #{project_id} at #{url}"
   end
 
   private
-
-  def project_name
-    round_trip_project.name
-  end
 
   def project_id
     round_trip_project.config[:redmine_project_id]

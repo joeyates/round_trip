@@ -34,7 +34,7 @@ describe RoundTrip::TrelloDownloaderService do
   let(:round_trip_project) { stub('RoundTrip::Project', :config => project_config) }
   let(:authorizer) { stub('RoundTrip::Trello::Authorizer', :client => client) }
   let(:client) { stub('Trello::Client') }
-  let(:board) { stub('Trello::Board', :cards => [card]) }
+  let(:board) { stub('Trello::Board', :name => 'My Board', :cards => [card]) }
   let(:card) { stub('Trello::Card', card_attributes) }
 
   describe '#run' do
