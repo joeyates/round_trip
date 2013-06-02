@@ -9,6 +9,8 @@ require 'round_trip'
 
 ENVIRONMENT = ENV['ROUND_TRIP_ENVIRONMENT'] || 'development'
 
+RoundTrip.logger = Logger.new(STDOUT)
+
 database_pathname = File.join(project_path, 'db', "#{ENVIRONMENT}.sqlite3")
 RoundTrip::DatabaseConnector.new(database_pathname).connect
 
