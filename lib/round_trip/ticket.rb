@@ -28,5 +28,17 @@ class RoundTrip::Ticket < ActiveRecord::Base
       :redmine_description => resource.description,
     )
   end
+
+  def self.create_from_trello_card(card)
+    create!(
+      :trello_id => card.id,
+      :trello_board_id => card.board_id,
+      :trello_name => card.name,
+      :trello_desc => card.description,
+      :trello_last_activity_date => card.last_activity_date,
+      :trello_url => card.url,
+      :trello_closed => card.closed,
+    )
+  end
 end
 
