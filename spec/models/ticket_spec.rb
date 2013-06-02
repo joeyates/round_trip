@@ -1,8 +1,8 @@
 require 'model_spec_helper'
 
 describe RoundTrip::Ticket do
-  before do
-    RoundTrip::Ticket.stubs(:create!).with(anything)
+  context 'scopes' do
+    it 'needs specs'
   end
 
   context 'create_from_* methods' do

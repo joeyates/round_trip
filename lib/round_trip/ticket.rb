@@ -19,6 +19,16 @@ class RoundTrip::Ticket < ActiveRecord::Base
       t.boolean   :trello_closed
 =end
 
+  def self.at
+    arel_table
+  end
+
+  scope :trello_only, where(:redmine_id => nil)
+  scope :redmine_only, where(:trello_id => nil)
+  scope :not_united, where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil)))
+  scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
+  scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
+
   def self.create_from_redmine_resource(resource)
     attributes = {
       :redmine_id          => resource.id,
