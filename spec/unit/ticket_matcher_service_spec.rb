@@ -30,6 +30,7 @@ describe RoundTrip::TicketMatcherService do
     end
 
     context 'redmine id is in trello card, but not vice versa' do
+      it 'requests suitable tickets'
       it 'only checks un-united tickets'
       it 'fails if the id is in more than one trello card'
       it 'unites the cards'
@@ -38,6 +39,7 @@ describe RoundTrip::TicketMatcherService do
     end
 
     context 'trello id is in redmine issue, but not vice versa' do
+      it 'requests suitable tickets'
       it 'only checks un-united tickets'
       it 'fails if the trello id is in more than one redmine issue'
       it 'unites the cards'
@@ -46,6 +48,7 @@ describe RoundTrip::TicketMatcherService do
     end
 
     context 'titles match' do
+      it 'requests suitable tickets'
       it 'only checks un-united tickets'
       it 'fails if there are not exactly two matching titles'
       it 'unites the cards'
