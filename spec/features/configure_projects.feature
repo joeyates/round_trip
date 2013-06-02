@@ -25,9 +25,9 @@ Feature: Configure projects
     | name                | new_name                    |
     | trello key          | 123stella                   |
     | trello token        | secret                      |
-    | trello board_id     | ae87d4567                   |
+    | trello board id     | ae87d4567                   |
     | redmine url         | https://example.com/redmine |
-    | redmine project_id  | 12345                       |
+    | redmine project id  | 12345                       |
 
   Scenario: Edit a project - save
     Given I edit an existing project
