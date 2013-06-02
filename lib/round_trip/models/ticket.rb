@@ -4,19 +4,21 @@ class RoundTrip::Ticket < ActiveRecord::Base
   self.table_name = 'round_trip_tickets'
 
 =begin
-      t.integer   :redmine_id
-      t.integer   :redmine_project_id
-      t.string    :redmine_subject
-      t.text      :redmine_description
-      t.datetime  :redmine_updated_on
-      t.string    :trello_id
-      t.string    :trello_board_id
-      t.string    :trello_list_id
-      t.string    :trello_name
-      t.text      :trello_desc
-      t.datetime  :trello_last_activity_date
-      t.string    :trello_url
-      t.boolean   :trello_closed
+  redmine_id                 integer   
+  redmine_project_id         integer   
+  redmine_subject            string    
+  redmine_description        text      
+  redmine_updated_on         datetime  
+  redmine_trello_id          integer
+  trello_id                  string    
+  trello_board_id            string    
+  trello_list_id             string    
+  trello_name                string    
+  trello_desc                text      
+  trello_last_activity_date  datetime  
+  trello_url                 string    
+  trello_closed              boolean   
+  trello_redmine_id          integer
 =end
 
   def self.at
@@ -48,6 +50,7 @@ class RoundTrip::Ticket < ActiveRecord::Base
     attributes = {
       :trello_id => card.id,
       :trello_board_id => card.board_id,
+      :trello_list_id => card.list_id,
       :trello_name => card.name,
       :trello_desc => card.description,
       :trello_last_activity_date => card.last_activity_date,
@@ -59,6 +62,29 @@ class RoundTrip::Ticket < ActiveRecord::Base
       attributes[:trello_redmine_id] = m[1].to_i
     end
     create!(attributes)
+  end
+
+  def self.check_repeated_redmine_ids
+    too_many_redmine = trello_has_redmine_id.group('trello_redmine_id').having('count() > 1').count
+    return if too_many_redmine.keys.size == 0
+
+    errors = too_many_redmine.map do |redmine_id, count|
+      "#{count} Trello cards found with the same Redmine ticket id: #{redmine_id}"
+    end.join("\n")
+    raise errors
+  end
+
+  def merge_redmine(redmine_ticket)
+    self.redmine_id = redmine_ticket.redmine_id
+    self.redmine_project_id = redmine_ticket.redmine_project_id
+    self.redmine_subject = redmine_ticket.redmine_subject
+    self.redmine_description = redmine_ticket.redmine_description
+    self.redmine_updated_on = redmine_ticket.redmine_updated_on
+
+    self.redmine_trello_id = trello_ticket.trello_id
+
+    redmine_ticket.destroy
+    save!
   end
 end
 

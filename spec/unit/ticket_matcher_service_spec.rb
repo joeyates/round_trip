@@ -29,32 +29,65 @@ describe RoundTrip::TicketMatcherService do
       end
     end
 
-    context 'redmine id is in trello card, but not vice versa' do
+    context 'trello id is in redmine issue, but not vice versa' do
+      it 'checks if the trello id is in more than one redmine issue'
       it 'requests suitable tickets'
-      it 'only checks un-united tickets'
-      it 'fails if the id is in more than one trello card'
-      it 'unites the cards'
-      it 'puts the trello id in the description'
-      it 'marks for redmine and trello update'
+      it 'extracts un-united tickets'
     end
 
-    context 'trello id is in redmine issue, but not vice versa' do
-      it 'requests suitable tickets'
-      it 'only checks un-united tickets'
-      it 'fails if the trello id is in more than one redmine issue'
-      it 'unites the cards'
-      it 'puts the redmine id in the description'
-      it 'marks for redmine and trello update'
+    context 'trello card has redmine id' do
+      let(:redmine_issue_id) { 12345 }
+      let(:trello_ticket) { stub('RoundTrip::Ticket (trello)', :trello_redmine_id => redmine_issue_id, :merge_redmine => nil, :save! => nil) }
+      let(:redmine_ticket) { stub('RoundTrip::Ticket (redmine)') }
+      let(:trello_has_redmine_id_relation) { stub('ActiveRecord::Relation', :not_united => not_united_relation) }
+      let(:not_united_relation) { stub('ActiveRecord::Relation', :all => [trello_ticket]) }
+
+      subject { RoundTrip::TicketMatcherService.new(round_trip_project) }
+
+      before do
+        RoundTrip::Ticket.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
+        RoundTrip::Ticket.stubs(:check_repeated_redmine_ids)
+        RoundTrip::Ticket.stubs(:find).with(redmine_issue_id).returns(redmine_ticket)
+      end
+
+      it 'checks if the redmine id is in more than one trello card' do
+        subject.run
+
+        expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids)
+      end
+
+      it 'requests suitable tickets' do
+        subject.run
+
+        expect(RoundTrip::Ticket).to have_received(:trello_has_redmine_id)
+      end
+
+      it 'extracts un-united tickets' do
+        subject.run
+
+        expect(trello_has_redmine_id_relation).to have_received(:not_united)
+      end
+
+      it 'fails if the matching redmine issue is missing' do
+        RoundTrip::Ticket.stubs(:find).with(redmine_issue_id).raises('not found')
+
+        expect {
+          subject.run
+        }.to raise_error
+      end
+
+      it 'merges the redmine data into the trello ticket' do
+        subject.run
+
+        expect(trello_ticket).to have_received(:merge_redmine).with(redmine_ticket)
+      end
     end
 
     context 'titles match' do
+      it 'checks if there are cases of more than two matching titles'
       it 'requests suitable tickets'
-      it 'only checks un-united tickets'
-      it 'fails if there are not exactly two matching titles'
+      it 'extracts un-united tickets'
       it 'unites the cards'
-      it 'puts the redmine id in the description'
-      it 'puts the trello id in the description'
-      it 'marks for redmine and trello update'
     end
   end
 end

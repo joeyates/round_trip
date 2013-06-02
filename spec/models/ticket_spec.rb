@@ -109,5 +109,80 @@ describe RoundTrip::Ticket do
       end
     end
   end
+
+  describe '.check_repeated_redmine_ids' do
+    let(:trello_has_redmine_id_relation) { stub('ActiveRecord::Relation', :group => group_by_redmine_id_relation) }
+    let(:group_by_redmine_id_relation) { stub('ActiveRecord::Relation', :having => having_relation) }
+    let(:having_relation) { stub('ActiveRecord::Relation', :count => count_relation) }
+    let(:count_relation) { stub('ActiveRecord::Relation') }
+
+    it 'needs specs' do
+      pending
+      trello_has_redmine_id_relation.stubs(:count).returns(2)
+      #to raise_error(RuntimeError, /\d+ Trello cards found with the same Redmine ticket id: \d+, \d+/)
+    end
+  end
+
+  describe '.merge_redmine' do
+    let(:trello_id) { 'deadbeef' }
+    let(:redmine_issue_id) { 12345 }
+    let(:redmine_project_id) { 345 }
+    let(:redmine_subject) { 'The redmine subject' }
+    let(:redmine_description) { 'The redmine description' }
+    let(:redmine_updated_on) { '20120304' }
+    let(:trello_ticket_methods) do
+      {
+        :trello_id => trello_id,
+        :trello_redmine_id => redmine_issue_id,
+        :redmine_id= => nil,
+        :redmine_project_id= => nil,
+        :redmine_subject= => nil,
+        :redmine_description= => nil,
+        :redmine_updated_on= => nil,
+        :redmine_trello_id= => nil,
+        :save! => nil,
+      }
+    end
+    let(:redmine_ticket_attributes) do
+      {
+        :redmine_id => redmine_issue_id,
+        :redmine_project_id => redmine_project_id,
+        :redmine_subject => redmine_subject,
+        :redmine_description => redmine_description,
+        :redmine_updated_on => redmine_updated_on,
+        :destroy => nil,
+      }
+    end
+    let(:trello_ticket) { stub('RoundTrip::Ticket (trello)', trello_ticket_methods) }
+    let(:redmine_ticket) { stub('RoundTrip::Ticket (redmine)', redmine_ticket_attributes) }
+
+    it 'copies the redmine data to the trello ticket' do
+      pending
+
+      expect(trello_ticket).to have_received(:redmine_id=).with(redmine_issue_id)
+      expect(trello_ticket).to have_received(:redmine_project_id=).with(redmine_project_id)
+      expect(trello_ticket).to have_received(:redmine_subject=).with(redmine_subject)
+      expect(trello_ticket).to have_received(:redmine_description=).with(redmine_description)
+      expect(trello_ticket).to have_received(:redmine_updated_on=).with(redmine_updated_on)
+    end
+
+    it 'copies the trello id to the redmine data' do
+      pending
+
+      expect(trello_ticket).to have_received(:redmine_trello_id=).with(trello_id)
+    end
+
+    it 'destroys the redmine ticket' do
+      pending
+
+      expect(redmine_ticket).to have_received(:destroy)
+    end
+
+    it 'saves the trello ticket' do
+      pending
+
+      expect(trello_ticket).to have_received(:save!)
+    end
+  end
 end
 
