@@ -11,9 +11,8 @@ class RoundTrip::Trello::ConnectionTester
   end
 
   def run
-    RoundTrip::Trello::Authorizer.new(config).run
-    member = ::Trello::Member.find('me')
-    $stderr.write "member: #{member.inspect}\n"
+    authorizer = RoundTrip::Trello::Authorizer.new(config)
+    authorizer.client.find(:members, 'me')
     [true, "It works"]
   rescue Exception => e
     [false, "Error: #{e.message}"]
