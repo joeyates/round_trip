@@ -1,4 +1,4 @@
-require 'round_trip/ticket'
+require 'round_trip/models/ticket'
 require 'round_trip/trello/authorizer'
 
 class RoundTrip::TrelloDownloaderService

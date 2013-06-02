@@ -1,4 +1,3 @@
-require 'active_record'
-require 'round_trip/project'
-require 'round_trip/ticket'
+require 'round_trip/models/project'
+require 'round_trip/models/ticket'
 
