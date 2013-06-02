@@ -13,6 +13,7 @@ class RoundTrip::ProjectSynchroniserService
   def run
     RoundTrip::RedmineDownloaderService.new(project).run
     RoundTrip::TrelloDownloaderService.new(project).run
+    RoundTrip::TicketMatcherService.new(project).run
   end
 end
 
