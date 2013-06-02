@@ -1,4 +1,4 @@
-class RoundTrip::TicketMatcherService
+class RoundTrip::TicketMergerService
   attr_reader :round_trip_project
 
   def initialize(round_trip_project)

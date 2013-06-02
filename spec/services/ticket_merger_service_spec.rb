@@ -1,6 +1,6 @@
 require 'model_spec_helper'
 
-describe RoundTrip::TicketMatcherService do
+describe RoundTrip::TicketMergerService do
   describe '#run' do
     let(:attributes) do
       {
@@ -11,7 +11,7 @@ describe RoundTrip::TicketMatcherService do
     end
     let(:round_trip_project) { stub('RoundTrip::Project', :config => attributes) }
 
-    subject { RoundTrip::TicketMatcherService.new(round_trip_project) }
+    subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
     context 'config checks' do
       [:redmine_project_id, :redmine_url, :trello_board_id].each do |key|
@@ -20,7 +20,7 @@ describe RoundTrip::TicketMatcherService do
           partial = attributes.clone
           partial.delete(key)
           round_trip_project = stub('RoundTrip::Project', :config => partial)
-          subject = RoundTrip::TicketMatcherService.new(round_trip_project)
+          subject = RoundTrip::TicketMergerService.new(round_trip_project)
 
           expect {
             subject.run
@@ -42,7 +42,7 @@ describe RoundTrip::TicketMatcherService do
       let(:trello_has_redmine_id_relation) { stub('ActiveRecord::Relation', :not_united => not_united_relation) }
       let(:not_united_relation) { stub('ActiveRecord::Relation', :all => [trello_ticket]) }
 
-      subject { RoundTrip::TicketMatcherService.new(round_trip_project) }
+      subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
       before do
         RoundTrip::Ticket.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
