@@ -2,8 +2,8 @@ require 'active_record'
 
 class RoundTrip::Project < ActiveRecord::Base
   CONFIGURATION = [
-    [:redmine, [:url, :key, :project_id]],
-    [:trello,  [:key, :secret, :token, :board_id]],
+    :redmine_url, :redmine_key, :redmine_project_id,
+    :trello_key, :trello_secret, :trello_token, :trello_board_id,
   ]
   include ActiveRecord::Validations
 
@@ -11,8 +11,7 @@ class RoundTrip::Project < ActiveRecord::Base
 
   validates_presence_of :name
 
-  serialize :redmine
-  serialize :trello
+  serialize :config
 
   after_initialize :set_defaults
   before_create :set_defaults
@@ -20,8 +19,7 @@ class RoundTrip::Project < ActiveRecord::Base
   private
 
   def set_defaults
-    self.redmine ||= {}
-    self.trello ||= {}
+    self.config ||= {}
   end
 end
 

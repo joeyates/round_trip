@@ -3,18 +3,18 @@ require 'trello'
 module RoundTrip; module Trello; end; end
 
 class RoundTrip::Trello::Authorizer
-  attr_reader :config
+  attr_reader :key, :secret, :token
   attr_reader :client
 
-  def initialize(config)
-    @config = config
+  def initialize(key, secret, token)
+    @key, @secret, @token = key, secret, token
   end
 
   def client
     @client ||= Trello::Client.new(
-      :consumer_key => config[:key],
-      :consumer_secret => config[:secret],
-      :oauth_token => config[:token],
+      :consumer_key => key,
+      :consumer_secret => secret,
+      :oauth_token => token,
       :oauth_token_secret => nil,
     )
   end

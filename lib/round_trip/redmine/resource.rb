@@ -4,11 +4,11 @@ module RoundTrip; end
 module RoundTrip::Redmine; end
 
 class RoundTrip::Redmine::Resource < ActiveResource::Base
-  def self.setup(config)
+  def self.setup(url, key)
     # Before requesting resources, you must set the redmine API key
     # and site URL via this method
-    self.headers['X-Redmine-API-Key'] = config[:key]
-    self.site = config[:url]
+    self.site = url
+    self.headers['X-Redmine-API-Key'] = key
   end
 
   def self.headers

@@ -5,36 +5,30 @@ module RoundTrip::Configurator::Presenter; end
 class RoundTrip::Configurator::Presenter::Project
   attr_reader :project
 
-  delegate :name, :name=,
-    :redmine, :redmine=,
-    :trello, :trello=,
-    :save!,
-    :to => :@project
+  delegate :name, :name=, :config, :save!, :to => :@project
 
   def initialize(project)
     @project = project
   end
 
   def to_s
-    values = ["name: #{name}"] + each_configuration do |name, _, key, v|
+    values = ["name: #{name}"] + each_configuration do |key, human_name, v|
       value =
         if not v.nil? and v != ''
           v
         else
           '(unset)'
         end
-      "#{name} #{key}: #{value}"
+      "#{human_name}: #{value}"
     end
     values.join("\n")
   end
 
   def each_configuration(&block)
     result = []
-    RoundTrip::Project::CONFIGURATION.map do |attribute_name, keys|
-      attribute = project.send(attribute_name)
-      keys.map do |key|
-        result << block.call(attribute_name, attribute, key, attribute[key])
-      end
+    RoundTrip::Project::CONFIGURATION.map do |key|
+      human_name = key.to_s.gsub('_', ' ')
+      result << block.call(key, human_name, config[key])
     end
     result
   end

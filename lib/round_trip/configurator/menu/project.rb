@@ -11,18 +11,17 @@ class RoundTrip::Configurator::Menu::Project < RoundTrip::Configurator::Menu::Ba
         menu.choice('name') do
           project.name = high_line.ask("name: ")
         end
-        project.each_configuration do |name, attribute, key, value|
-          full_key_name = "#{name} #{key}"
-          menu.choice(full_key_name) do
-            attribute[key] = high_line.ask("#{full_key_name}: ")
+        project.each_configuration do |key, human_name, value|
+          menu.choice(human_name) do
+            project.config[key] = high_line.ask("#{human_name}: ")
           end
         end
         menu.choice('test redmine connection') do
-          result, message = RoundTrip::Redmine::ConnectionTester.new(project.redmine).run
+          result, message = RoundTrip::Redmine::ConnectionTester.new(project).run
           high_line.ask "#{message}\nPress a key... "
         end
         menu.choice('test trello connection') do
-          result, message = RoundTrip::Trello::ConnectionTester.new(project.trello).run
+          result, message = RoundTrip::Trello::ConnectionTester.new(project).run
           high_line.ask "#{message}\nPress a key... "
         end
         menu.choice('save') do
