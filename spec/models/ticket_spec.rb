@@ -58,6 +58,7 @@ describe RoundTrip::Ticket do
     describe '.create_from_trello_card' do
       let(:card_id) { 'aaaa' }
       let(:board_id) { 'bbbb' }
+      let(:list_id) { 'cccc' }
       let(:redmine_issue_id) { 12345 }
       let(:card_name) { 'Card name' }
       let(:card_description) { "Card description\n" }
@@ -68,6 +69,7 @@ describe RoundTrip::Ticket do
         {
           :id => card_id,
           :board_id => board_id,
+          :list_id => list_id,
           :name => card_name,
           :description => card_description,
           :last_activity_date => card_last_activity_date,
@@ -80,6 +82,7 @@ describe RoundTrip::Ticket do
         {
           :trello_id => card_id,
           :trello_board_id => board_id,
+          :trello_list_id => list_id,
           :trello_name => card_name,
           :trello_desc => card_description,
           :trello_last_activity_date => card_last_activity_date,

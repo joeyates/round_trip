@@ -44,6 +44,7 @@ describe RoundTrip::TrelloDownloaderService do
       RoundTrip::Ticket.stubs(:where).with(:trello_board_id => trello_board_id).returns(tickets_relation)
       RoundTrip::Trello::Authorizer.stubs(:new).with(*trello_authorization_config).returns(authorizer)
       client.stubs(:find).with(:boards, trello_board_id).returns(board)
+      RoundTrip::Ticket.stubs(:create_from_trello_card).with(card)
     end
 
     it 'checks for a trello board id'
@@ -56,7 +57,12 @@ describe RoundTrip::TrelloDownloaderService do
 
     it 'creates an authorizer'
     it 'requests the board'
-    it 'creates tickets'
+
+    it 'creates tickets' do
+      subject.run
+
+      expect(RoundTrip::Ticket).to have_received(:create_from_trello_card).with(card)
+    end
   end
 end
 
