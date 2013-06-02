@@ -1,11 +1,34 @@
 require 'model_spec_helper'
 
 describe RoundTrip::TicketMatcherService do
-  describe '.initialize' do
-    it 'expects a redmine project id and a trello board id'
-  end
-
   describe '#run' do
+    let(:attributes) do
+      {
+        :redmine_project_id => 'a',
+        :redmine_url => 'b',
+        :trello_board_id => 'c',
+      }
+    end
+    let(:round_trip_project) { stub('RoundTrip::Project', :config => attributes) }
+
+    subject { RoundTrip::TicketMatcherService.new(round_trip_project) }
+
+    context 'config checks' do
+      [:redmine_project_id, :redmine_url, :trello_board_id].each do |key|
+        name = key.to_s.gsub('_', ' ')
+        it "expects a #{name}" do
+          partial = attributes.clone
+          partial.delete(key)
+          round_trip_project = stub('RoundTrip::Project', :config => partial)
+          subject = RoundTrip::TicketMatcherService.new(round_trip_project)
+
+          expect {
+            subject.run
+          }.to raise_error(RuntimeError, "#{name} not set")
+        end
+      end
+    end
+
     context 'redmine id is in trello card, but not vice versa' do
       it 'only checks un-united tickets'
       it 'fails if the id is in more than one trello card'
