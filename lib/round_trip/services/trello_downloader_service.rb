@@ -6,10 +6,10 @@ class RoundTrip::TrelloDownloaderService
 
   def initialize(round_trip_project)
     @round_trip_project = round_trip_project
-    raise 'No board_id set' if board_id.nil?
   end
 
   def run
+    raise 'No board_id set' if board_id.nil?
     RoundTrip::Ticket.where(:trello_board_id => board_id).destroy_all
     authorizer = RoundTrip::Trello::Authorizer.new(
       round_trip_project.config[:trello_key],

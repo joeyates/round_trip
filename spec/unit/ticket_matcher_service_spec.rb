@@ -33,24 +33,25 @@ describe RoundTrip::TicketMatcherService do
       it 'only checks un-united tickets'
       it 'fails if the id is in more than one trello card'
       it 'unites the cards'
-      it 'puts the trello id in the redmine issue'
-      it "doesn't alter the redmine timestamp"
+      it 'puts the trello id in the description'
+      it 'marks for redmine and trello update'
     end
 
     context 'trello id is in redmine issue, but not vice versa' do
       it 'only checks un-united tickets'
       it 'fails if the trello id is in more than one redmine issue'
       it 'unites the cards'
-      it 'puts the redmine id in the trello card'
-      it "doesn't alter the trello timestamp"
+      it 'puts the redmine id in the description'
+      it 'marks for redmine and trello update'
     end
 
     context 'titles match' do
       it 'only checks un-united tickets'
       it 'fails if there are not exactly two matching titles'
       it 'unites the cards'
-      it 'puts the trello id in the redmine issue'
-      it 'puts the redmine id in the trello card'
+      it 'puts the redmine id in the description'
+      it 'puts the trello id in the description'
+      it 'marks for redmine and trello update'
     end
   end
 end

@@ -47,9 +47,12 @@ describe RoundTrip::ProjectSynchroniserService do
       expect(ticket_matcher_service).to have_received(:run)
     end
 
-    it 'adds unmatched redmine tickets to trello'
-    it 'adds unmatched trello tickets to redmine'
+    it 'prepares unmatched redmine tickets for trello'
+    it 'prepares unmatched trello tickets for redmine'
     it "syncs all cards' state"
+    it 'sets redmine and trello ids in the description'
+    it 'pushes changed data to redmine'
+    it 'pushes changed data to trello'
   end
 end
 

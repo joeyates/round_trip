@@ -46,11 +46,17 @@ describe RoundTrip::TrelloDownloaderService do
       client.stubs(:find).with(:boards, trello_board_id).returns(board)
     end
 
+    it 'checks for a trello board id'
+
     it 'clears all previous tickets for the board' do
       subject.run
 
       expect(tickets_relation).to have_received(:destroy_all)
     end
+
+    it 'creates an authorizer'
+    it 'requests the board'
+    it 'creates tickets'
   end
 end
 

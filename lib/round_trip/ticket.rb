@@ -20,17 +20,22 @@ class RoundTrip::Ticket < ActiveRecord::Base
 =end
 
   def self.create_from_redmine_resource(resource)
-    create!(
+    attributes = {
       :redmine_id          => resource.id,
       :redmine_project_id  => resource.project.id,
       :redmine_updated_on  => resource.updated_on,
       :redmine_subject     => resource.subject,
       :redmine_description => resource.description,
-    )
+    }
+    m = resource.description.match(/^\#\# Trello card id: (\w+) \#\#$/)
+    if m
+      attributes[:redmine_trello_id] = m[1]
+    end
+    create!(attributes)
   end
 
   def self.create_from_trello_card(card)
-    create!(
+    attributes = {
       :trello_id => card.id,
       :trello_board_id => card.board_id,
       :trello_name => card.name,
@@ -38,7 +43,12 @@ class RoundTrip::Ticket < ActiveRecord::Base
       :trello_last_activity_date => card.last_activity_date,
       :trello_url => card.url,
       :trello_closed => card.closed,
-    )
+    }
+    m = card.description.match(/^\#\# Redmine issue id: (\d+) \#\#$/)
+    if m
+      attributes[:trello_redmine_id] = m[1].to_i
+    end
+    create!(attributes)
   end
 end
 

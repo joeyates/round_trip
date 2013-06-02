@@ -16,25 +16,7 @@ describe RoundTrip::RedmineDownloaderService do
   let(:issue_find_params) do
     [:all, :params => {:project_id => redmine_project_id}]
   end
-  let(:resource_attribs) do
-    {
-      :id => 123,
-      :project => stub('RoundTrip::Redmine::Issue', :id => redmine_project_id),
-      :updated_on => '2013/05/17 18:15:28 +0200',
-      :subject => 'The Subject',
-      :description => 'The description',
-    }
-  end
-  let(:issue_resource) { stub('RoundTrip::Redmine::Issue', resource_attribs) }
-  let(:ticket_attributes) do
-    {
-      :redmine_id => 123,
-      :redmine_project_id => redmine_project_id,
-      :redmine_updated_on => '2013/05/17 18:15:28 +0200',
-      :redmine_subject => 'The Subject',
-      :redmine_description => 'The description',
-    }
-  end
+  let(:issue_resource) { stub('RoundTrip::Redmine::Issue') }
 
   describe '.initialize' do
     it 'expects a round_trip project'
@@ -45,9 +27,9 @@ describe RoundTrip::RedmineDownloaderService do
 
     before do
       RoundTrip::Ticket.stubs(:where).with(:redmine_project_id => redmine_project_id).returns(tickets_relation)
-      RoundTrip::Ticket.stubs(:create!).with(anything)
       RoundTrip::Redmine::Resource.stubs(:setup).with(redmine_url, redmine_key)
       RoundTrip::Redmine::Issue.stubs(:find).with(*issue_find_params).returns([issue_resource])
+      RoundTrip::Ticket.stubs(:create_from_redmine_resource).with(issue_resource)
       subject.run
     end
 
@@ -65,7 +47,7 @@ describe RoundTrip::RedmineDownloaderService do
     end
 
     it 'creates tickets' do
-      expect(RoundTrip::Ticket).to have_received(:create!).with(ticket_attributes)
+      expect(RoundTrip::Ticket).to have_received(:create_from_redmine_resource).with(issue_resource)
     end
   end
 end
