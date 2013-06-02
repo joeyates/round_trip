@@ -13,7 +13,7 @@ class RoundTrip::Redmine::ConnectionTester
       round_trip_project.config[:redmine_url],
       round_trip_project.config[:redmine_key]
     )
-    RoundTrip::Redmine::Project.find(round_trip_project.config[:project_id])
+    RoundTrip::Redmine::Project.find(round_trip_project.config[:redmine_project_id])
     [true, "It works"]
   rescue Exception => e
     [false, "Error: #{e.message}"]
