@@ -10,7 +10,7 @@ class RoundTrip::TicketMergerService
     raise 'redmine url not set' if round_trip_project.config[:redmine_url].nil?
     raise 'trello board id not set' if round_trip_project.config[:trello_board_id].nil?
 
-    RoundTrip::Ticket.check_repeated_redmine_ids
+    RoundTrip::Ticket.check_repeated_redmine_ids(round_trip_project.config[:redmine_project_id])
     trello_with_redmine_id = RoundTrip::Ticket.trello_has_redmine_id.not_united
     trello_with_redmine_id.all.each do |trello_ticket|
       redmine_ticket = RoundTrip::Ticket.find(trello_ticket.trello_redmine_id)

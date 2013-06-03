@@ -30,6 +30,7 @@ class RoundTrip::Ticket < ActiveRecord::Base
   scope :not_united, where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil)))
   scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
   scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
+  scope :for_redmine_project, ->(redmine_project_id) { where(:redmine_project_id => redmine_project_id) }
 
   def self.create_from_redmine_resource(resource)
     attributes = {
@@ -64,8 +65,8 @@ class RoundTrip::Ticket < ActiveRecord::Base
     create!(attributes)
   end
 
-  def self.check_repeated_redmine_ids
-    too_many_redmine = trello_has_redmine_id.group('trello_redmine_id').having('count() > 1').count
+  def self.check_repeated_redmine_ids(redmine_project_id)
+    too_many_redmine = trello_has_redmine_id.for_redmine_project(redmine_project_id).group('trello_redmine_id').having('count() > 1').count
     return if too_many_redmine.keys.size == 0
 
     errors = too_many_redmine.map do |redmine_id, count|
