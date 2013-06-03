@@ -2,26 +2,20 @@ require 'model_spec_helper'
 
 describe RoundTrip::TicketMergerService do
   describe '#run' do
-    let(:attributes) do
-      {
-        :redmine_project_id => 'a',
-        :redmine_url => 'b',
-        :trello_board_id => 'c',
-      }
-    end
-    let(:round_trip_project) { stub('RoundTrip::Project', :config => attributes) }
+    let(:attributes) { attributes_for(:project) }
+    let(:round_trip_project) { create(:project, attributes) }
 
     subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
     before do
-      RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(attributes[:redmine_project_id])
+      RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(attributes[:config][:redmine_project_id])
     end
 
     context 'config checks' do
       [:redmine_project_id, :redmine_url, :trello_board_id].each do |key|
         name = key.to_s.gsub('_', ' ')
         it "expects a #{name}" do
-          partial = attributes.clone
+          partial = attributes[:config].clone
           partial.delete(key)
           round_trip_project = stub('RoundTrip::Project', :config => partial)
           subject = RoundTrip::TicketMergerService.new(round_trip_project)
