@@ -13,6 +13,10 @@ describe RoundTrip::TicketMergerService do
 
     subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
+    before do
+      RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(attributes[:redmine_project_id])
+    end
+
     context 'config checks' do
       [:redmine_project_id, :redmine_url, :trello_board_id].each do |key|
         name = key.to_s.gsub('_', ' ')
@@ -29,13 +33,24 @@ describe RoundTrip::TicketMergerService do
       end
     end
 
-    context 'trello id is in redmine issue, but not vice versa' do
-      it 'checks if the trello id is in more than one redmine issue'
-      it 'requests suitable tickets'
-      it 'extracts un-united tickets'
+    context 'preliminary checks' do
+      it 'checks if there are trello ids in more than one redmine issue'
+
+      it 'checks if there are redmine ids in more than one trello card' do
+        subject.run
+
+        expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids)
+      end
+      it 'checks if there are cases of more than two matching titles'
     end
 
-    context 'trello card has redmine id' do
+    context 'where trello id is in redmine issue' do
+      it 'requests suitable tickets'
+      it 'extracts un-united tickets'
+      it 'merges the trello data into the redmine ticket'
+    end
+
+    context 'where redmine id is in trello card' do
       let(:redmine_issue_id) { 12345 }
       let(:trello_ticket) { stub('RoundTrip::Ticket (trello)', :trello_redmine_id => redmine_issue_id, :merge_redmine => nil, :save! => nil) }
       let(:redmine_ticket) { stub('RoundTrip::Ticket (redmine)') }
@@ -46,14 +61,7 @@ describe RoundTrip::TicketMergerService do
 
       before do
         RoundTrip::Ticket.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
-        RoundTrip::Ticket.stubs(:check_repeated_redmine_ids)
         RoundTrip::Ticket.stubs(:find).with(redmine_issue_id).returns(redmine_ticket)
-      end
-
-      it 'checks if the redmine id is in more than one trello card' do
-        subject.run
-
-        expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids)
       end
 
       it 'requests suitable tickets' do
@@ -84,10 +92,9 @@ describe RoundTrip::TicketMergerService do
     end
 
     context 'titles match' do
-      it 'checks if there are cases of more than two matching titles'
       it 'requests suitable tickets'
       it 'extracts un-united tickets'
-      it 'unites the cards'
+      it 'merges the trello data into the redmine ticket'
     end
   end
 end
