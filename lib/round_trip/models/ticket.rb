@@ -82,7 +82,7 @@ class RoundTrip::Ticket < ActiveRecord::Base
     self.redmine_description = redmine_ticket.redmine_description
     self.redmine_updated_on = redmine_ticket.redmine_updated_on
 
-    self.redmine_trello_id = trello_ticket.trello_id
+    self.redmine_trello_id = self.trello_id
 
     redmine_ticket.destroy
     save!

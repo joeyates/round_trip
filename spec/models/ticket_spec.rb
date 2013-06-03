@@ -130,63 +130,32 @@ describe RoundTrip::Ticket do
   end
 
   describe '.merge_redmine' do
-    let(:trello_id) { 'deadbeef' }
-    let(:redmine_issue_id) { 12345 }
-    let(:redmine_project_id) { 345 }
-    let(:redmine_subject) { 'The redmine subject' }
-    let(:redmine_description) { 'The redmine description' }
-    let(:redmine_updated_on) { '20120304' }
-    let(:trello_ticket_methods) do
-      {
-        :trello_id => trello_id,
-        :trello_redmine_id => redmine_issue_id,
-        :redmine_id= => nil,
-        :redmine_project_id= => nil,
-        :redmine_subject= => nil,
-        :redmine_description= => nil,
-        :redmine_updated_on= => nil,
-        :redmine_trello_id= => nil,
-        :save! => nil,
-      }
+    let(:trello_ticket) { create(:ticket) }
+    let(:redmine_ticket) { create(:redmine_ticket) }
+
+    before do
+      redmine_ticket.stubs(:destroy)
+      trello_ticket.stubs(:save!)
+      trello_ticket.merge_redmine(redmine_ticket)
     end
-    let(:redmine_ticket_attributes) do
-      {
-        :redmine_id => redmine_issue_id,
-        :redmine_project_id => redmine_project_id,
-        :redmine_subject => redmine_subject,
-        :redmine_description => redmine_description,
-        :redmine_updated_on => redmine_updated_on,
-        :destroy => nil,
-      }
-    end
-    let(:trello_ticket) { stub('RoundTrip::Ticket (trello)', trello_ticket_methods) }
-    let(:redmine_ticket) { stub('RoundTrip::Ticket (redmine)', redmine_ticket_attributes) }
 
     it 'copies the redmine data to the trello ticket' do
-      pending
-
-      expect(trello_ticket).to have_received(:redmine_id=).with(redmine_issue_id)
-      expect(trello_ticket).to have_received(:redmine_project_id=).with(redmine_project_id)
-      expect(trello_ticket).to have_received(:redmine_subject=).with(redmine_subject)
-      expect(trello_ticket).to have_received(:redmine_description=).with(redmine_description)
-      expect(trello_ticket).to have_received(:redmine_updated_on=).with(redmine_updated_on)
+      expect(trello_ticket.redmine_id).to eq(redmine_ticket.redmine_id)
+      expect(trello_ticket.redmine_project_id).to eq(redmine_ticket.redmine_project_id)
+      expect(trello_ticket.redmine_subject).to eq(redmine_ticket.redmine_subject)
+      expect(trello_ticket.redmine_description).to eq(redmine_ticket.redmine_description)
+      expect(trello_ticket.redmine_updated_on).to eq(redmine_ticket.redmine_updated_on)
     end
 
     it 'copies the trello id to the redmine data' do
-      pending
-
-      expect(trello_ticket).to have_received(:redmine_trello_id=).with(trello_id)
+      expect(trello_ticket.redmine_trello_id).to eq(trello_ticket.trello_id)
     end
 
     it 'destroys the redmine ticket' do
-      pending
-
       expect(redmine_ticket).to have_received(:destroy)
     end
 
     it 'saves the trello ticket' do
-      pending
-
       expect(trello_ticket).to have_received(:save!)
     end
   end
