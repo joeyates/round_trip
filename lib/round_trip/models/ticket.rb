@@ -88,12 +88,16 @@ class RoundTrip::Ticket < ActiveRecord::Base
     raise errors
   end
 
+  def self.copy_redmine_fields(from, to)
+    to.redmine_id          = from.redmine_id
+    to.redmine_project_id  = from.redmine_project_id
+    to.redmine_subject     = from.redmine_subject
+    to.redmine_description = from.redmine_description
+    to.redmine_updated_on  = from.redmine_updated_on
+  end
+
   def merge_redmine(redmine_ticket)
-    self.redmine_id = redmine_ticket.redmine_id
-    self.redmine_project_id = redmine_ticket.redmine_project_id
-    self.redmine_subject = redmine_ticket.redmine_subject
-    self.redmine_description = redmine_ticket.redmine_description
-    self.redmine_updated_on = redmine_ticket.redmine_updated_on
+    self.class.copy_redmine_fields(redmine_ticket, self)
 
     self.redmine_trello_id = self.trello_id
 
