@@ -5,11 +5,13 @@ describe RoundTrip::TicketMergerService do
     let(:attributes) { attributes_for(:project) }
     let(:round_trip_project) { create(:project, attributes) }
     let(:redmine_project_id) { attributes[:config][:redmine_project_id] }
+    let(:trello_board_id) { attributes[:config][:trello_board_id] }
 
     subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
     before do
       RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(redmine_project_id)
+      RoundTrip::Ticket.stubs(:check_repeated_trello_ids).with(trello_board_id)
     end
 
     context 'config checks' do
@@ -29,14 +31,18 @@ describe RoundTrip::TicketMergerService do
     end
 
     context 'preliminary checks' do
-      it 'checks if there are trello ids in more than one redmine issue'
-
-      it 'checks if there are redmine ids in more than one trello card' do
+      before do
         subject.run
+      end
 
+      it 'checks if there are duplicate redmine issue ids' do
         expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids).with(redmine_project_id)
       end
-      it 'checks if there are cases of more than two matching titles'
+
+      it 'checks if there are repeated trello card ids' do
+        expect(RoundTrip::Ticket).to have_received(:check_repeated_trello_ids).with(trello_board_id)
+      end
+      it 'checks if there are duplicate titles'
     end
 
     context 'where trello id is in redmine issue' do
