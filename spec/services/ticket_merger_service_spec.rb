@@ -4,11 +4,12 @@ describe RoundTrip::TicketMergerService do
   describe '#run' do
     let(:attributes) { attributes_for(:project) }
     let(:round_trip_project) { create(:project, attributes) }
+    let(:redmine_project_id) { attributes[:config][:redmine_project_id] }
 
     subject { RoundTrip::TicketMergerService.new(round_trip_project) }
 
     before do
-      RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(attributes[:config][:redmine_project_id])
+      RoundTrip::Ticket.stubs(:check_repeated_redmine_ids).with(redmine_project_id)
     end
 
     context 'config checks' do
@@ -33,7 +34,7 @@ describe RoundTrip::TicketMergerService do
       it 'checks if there are redmine ids in more than one trello card' do
         subject.run
 
-        expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids)
+        expect(RoundTrip::Ticket).to have_received(:check_repeated_redmine_ids).with(redmine_project_id)
       end
       it 'checks if there are cases of more than two matching titles'
     end
