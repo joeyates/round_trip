@@ -42,6 +42,7 @@ describe RoundTrip::TicketMergerService do
       it 'checks if there are repeated trello card ids' do
         expect(RoundTrip::Ticket).to have_received(:check_repeated_trello_ids).with(trello_board_id)
       end
+
       it 'checks if there are duplicate titles'
     end
 

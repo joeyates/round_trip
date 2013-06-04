@@ -46,22 +46,11 @@ describe RoundTrip::Ticket do
     end
 
     describe '.create_from_trello_card' do
-      let(:ticket_attributes) { attributes_for(:trello_ticket) }
-      let(:card_attributes) do
-        {
-          :id => ticket_attributes[:trello_id],
-          :board_id => ticket_attributes[:trello_board_id],
-          :list_id => ticket_attributes[:trello_list_id],
-          :name => ticket_attributes[:trello_name],
-          :description => ticket_attributes[:trello_desc],
-          :last_activity_date => ticket_attributes[:trello_last_activity_date],
-          :url => ticket_attributes[:trello_url],
-          :closed => ticket_attributes[:trello_closed],
-        }
-      end
+      let(:card_attributes) { attributes_for(:trello_card) }
+      let(:trello_card) { stub('Trello::Card', card_attributes) }
+      let(:ticket_attributes) { attributes_for(:trello_ticket, :from_trello_card, card_attributes) }
       let(:redmine_issue_id) { 12345 }
       let(:card_description_with_redmine_id) { "## Redmine issue id: #{redmine_issue_id} ##\n#{card_attributes[:description]}" }
-      let(:trello_card) { stub('Trello::Card', card_attributes) }
       let(:ticket_attributes_with_redmine_id) do
         ticket_attributes.merge(
           :trello_desc => card_description_with_redmine_id,
@@ -99,6 +88,10 @@ describe RoundTrip::Ticket do
         RoundTrip::Ticket.check_repeated_redmine_ids(123)
       }.to raise_error(RuntimeError, /\d+ Trello cards found with the same Redmine ticket id: \d+/)
     end
+  end
+
+  describe '.check_repeated_trello_ids' do
+    it 'needs specs'
   end
 
   describe '.merge_redmine' do

@@ -1,7 +1,6 @@
 FactoryGirl.define do
   sequence(:redmine_project_id)
   sequence(:redmine_url) { |n| "http://example.com/issues/#{n}" }
-  sequence(:trello_board_id) { |n| "#abcdef{n}" }
 
   factory :project, :class => RoundTrip::Project do
     sequence(:name) { |n| "Project #{n}" }
