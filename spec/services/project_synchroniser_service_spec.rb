@@ -22,6 +22,7 @@ describe RoundTrip::ProjectSynchroniserService do
     let(:trello_downloader_service) { stub('RoundTrip::TrelloDownloaderService', :run => nil) }
     let(:redmine_downloader_service) { stub('RoundTrip::RedmineDownloaderService', :run => nil) }
     let(:ticket_merger_service) { stub('RoundTrip::TicketMergerService', :run => nil) }
+    let(:matched_ticket_updater_service) { stub('RoundTrip::MatchedTicketUpdaterService', :run => nil) }
 
     subject { RoundTrip::ProjectSynchroniserService.new(round_trip_project) }
 
@@ -29,6 +30,7 @@ describe RoundTrip::ProjectSynchroniserService do
       RoundTrip::RedmineDownloaderService.stubs(:new).with(round_trip_project).returns(redmine_downloader_service)
       RoundTrip::TrelloDownloaderService.stubs(:new).with(round_trip_project).returns(trello_downloader_service)
       RoundTrip::TicketMergerService.stubs(:new).with(round_trip_project).returns(ticket_merger_service)
+      RoundTrip::MatchedTicketUpdaterService.stubs(:new).with(round_trip_project).returns(matched_ticket_updater_service)
       subject.run
     end
 
@@ -47,9 +49,13 @@ describe RoundTrip::ProjectSynchroniserService do
       expect(ticket_merger_service).to have_received(:run)
     end
 
+    it "syncs all matched tickets' state" do
+      expect(RoundTrip::MatchedTicketUpdaterService).to have_received(:new).with(round_trip_project)
+      expect(matched_ticket_updater_service).to have_received(:run)
+    end
+
     it 'prepares unmatched redmine tickets for trello'
     it 'prepares unmatched trello tickets for redmine'
-    it "syncs all cards' state"
     it 'sets redmine and trello ids in the description'
     it 'pushes changed data to redmine'
     it 'pushes changed data to trello'
