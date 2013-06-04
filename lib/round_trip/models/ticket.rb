@@ -31,6 +31,7 @@ class RoundTrip::Ticket < ActiveRecord::Base
   scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
   scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
   scope :for_redmine_project, ->(redmine_project_id) { where(:redmine_project_id => redmine_project_id) }
+  scope :for_trello_board, ->(trello_board_id) { where(:trello_board_id => trello_board_id) }
 
   def self.create_from_redmine_resource(resource)
     attributes = {
@@ -70,8 +71,20 @@ class RoundTrip::Ticket < ActiveRecord::Base
     return if too_many_redmine.keys.size == 0
 
     errors = too_many_redmine.map do |redmine_id, count|
-      "#{count} Trello cards found with the same Redmine ticket id: #{redmine_id}"
+      "#{count} Trello cards found with the same Redmine issue id: #{redmine_id}"
     end.join("\n")
+
+    raise errors
+  end
+
+  def self.check_repeated_trello_ids(trello_board_id)
+    too_many_trello = redmine_has_trello_id.for_trello_board(trello_board_id).group('redmine_trello_id').having('count() > 1').count
+    return if too_many_trello.keys.size == 0
+
+    errors = too_many_trello.map do |trello_id, count|
+      "#{count} Redmine issues found with the same Trello card id: #{trello_id}"
+    end.join("\n")
+
     raise errors
   end
 

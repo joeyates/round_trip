@@ -84,14 +84,28 @@ describe RoundTrip::Ticket do
     it 'raises an error for duplicate redmine ids' do
       result = {'123454f947c12c3479004705' => 2, '123454f947c12c3479004706' => 3}
       trello_has_redmine_id_relation.stubs(:for_redmine_project => stub(:group => stub(:having => stub(:count => result))))
+
       expect {
         RoundTrip::Ticket.check_repeated_redmine_ids(123)
-      }.to raise_error(RuntimeError, /\d+ Trello cards found with the same Redmine ticket id: \d+/)
+      }.to raise_error(RuntimeError, /\d+ Trello cards found with the same Redmine issue id: \d+/)
     end
   end
 
   describe '.check_repeated_trello_ids' do
-    it 'needs specs'
+    let(:redmine_has_trello_id_relation) { stub('ActiveRecord::Relation') }
+
+    before do
+      RoundTrip::Ticket.stubs(:redmine_has_trello_id).returns(redmine_has_trello_id_relation)
+    end
+
+    it 'raises an error for duplicate trello ids' do
+      result = {87654 => 2, 12345 => 3}
+      redmine_has_trello_id_relation.stubs(:for_trello_board => stub(:group => stub(:having => stub(:count => result))))
+
+      expect {
+        RoundTrip::Ticket.check_repeated_trello_ids(123)
+      }.to raise_error(RuntimeError, /\d+ Redmine issues found with the same Trello card id: \d+/)
+    end
   end
 
   describe '.merge_redmine' do
