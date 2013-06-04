@@ -81,7 +81,7 @@ describe RoundTrip::Ticket do
       RoundTrip::Ticket.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
     end
 
-    it 'raises an error if two or more trello cards have the same redmine id' do
+    it 'raises an error for duplicate redmine ids' do
       result = {'123454f947c12c3479004705' => 2, '123454f947c12c3479004706' => 3}
       trello_has_redmine_id_relation.stubs(:for_redmine_project => stub(:group => stub(:having => stub(:count => result))))
       expect {
