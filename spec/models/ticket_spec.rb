@@ -114,6 +114,10 @@ describe RoundTrip::Ticket do
     it 'belongs to a project'
   end
 
+  context 'validations' do
+    it 'validates presence of project'
+  end
+
   describe '#merge_redmine' do
     let(:trello_ticket) { create(:ticket) }
     let(:redmine_ticket) { create(:redmine_ticket) }

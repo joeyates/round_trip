@@ -3,7 +3,10 @@ require 'active_record'
 class RoundTrip::Ticket < ActiveRecord::Base
   self.table_name = 'round_trip_tickets'
 
+  belongs_to :project
+
 =begin
+  project_id                 integer
   redmine_id                 integer   
   redmine_project_id         integer   
   redmine_subject            string    
