@@ -4,6 +4,8 @@ module RoundTrip
   class Ticket < ActiveRecord::Base
     belongs_to :project
 
+    validates :project, presence: true
+
 =begin
   project_id                 integer
   redmine_id                 integer   

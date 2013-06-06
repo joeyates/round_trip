@@ -116,7 +116,7 @@ module RoundTrip
     end
 
     context 'validations' do
-      it 'validates presence of project'
+      it { should validate_presence_of(:project) }
     end
 
     describe '#merge_redmine' do

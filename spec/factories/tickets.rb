@@ -8,6 +8,8 @@ FactoryGirl.define do
   sequence(:trello_url)                { |n| "http://trello.com/card/#{n}" }
 
   factory :ticket, :class => RoundTrip::Ticket do
+    association :project
+
     trait :with_redmine_data do
       sequence(:redmine_id) { |id| id }
       sequence(:redmine_project_id) { |id| id }
