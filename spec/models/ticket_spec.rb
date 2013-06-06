@@ -44,7 +44,7 @@ describe RoundTrip::Ticket do
     describe '.create_from_trello_card' do
       let(:card_attributes) { attributes_for(:trello_card) }
       let(:trello_card) { stub('Trello::Card', card_attributes) }
-      let(:ticket_attributes) { attributes_for(:trello_ticket, :from_trello_card, card_attributes) }
+      let(:ticket_attributes) { attributes_for(:ticket, :from_trello_card, card_attributes) }
       let(:redmine_issue_id) { 12345 }
       let(:card_description_with_redmine_id) { "## Redmine issue id: #{redmine_issue_id} ##\n#{card_attributes[:description]}" }
       let(:ticket_attributes_with_redmine_id) do

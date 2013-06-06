@@ -27,6 +27,7 @@ class RoundTrip::Ticket < ActiveRecord::Base
 
   scope :trello_only, where(:redmine_id => nil)
   scope :redmine_only, where(:trello_id => nil)
+  scope :united, where(at[:redmine_id].not_eq(nil).and(at[:trello_id].not_eq(nil)))
   scope :not_united, where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil)))
   scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
   scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
