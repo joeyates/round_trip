@@ -1,16 +1,16 @@
 require 'round_trip/configurator/menu/main'
 
-module RoundTrip; end
+module RoundTrip
+  class Configurator
+    attr_reader :high_line
 
-class RoundTrip::Configurator
-  attr_reader :high_line
+    def initialize(high_line)
+      @high_line = high_line
+    end
 
-  def initialize(high_line)
-    @high_line = high_line
-  end
-
-  def run
-    RoundTrip::Configurator::Menu::Main.new(high_line).run
+    def run
+      Configurator::Menu::Main.new(high_line).run
+    end
   end
 end
 

@@ -1,25 +1,26 @@
 require 'round_trip/trello/authorizer'
 
-module RoundTrip; end
-module RoundTrip::Trello; end
+module RoundTrip
+  module Trello; end
 
-class RoundTrip::Trello::ConnectionTester
-  attr_reader :round_trip_project
+  class Trello::ConnectionTester
+    attr_reader :project
 
-  def initialize(round_trip_project)
-    @round_trip_project = round_trip_project
-  end
+    def initialize(project)
+      @project = project
+    end
 
-  def run
-    authorizer = RoundTrip::Trello::Authorizer.new(
-      round_trip_project.config[:trello_key],
-      round_trip_project.config[:trello_secret],
-      round_trip_project.config[:trello_token],
-    )
-    authorizer.client.find(:members, 'me')
-    [true, "It works"]
-  rescue Exception => e
-    [false, "Error: #{e.message}"]
+    def run
+      authorizer = Trello::Authorizer.new(
+        project.config[:trello_key],
+        project.config[:trello_secret],
+        project.config[:trello_token],
+      )
+      authorizer.client.find(:members, 'me')
+      [true, "It works"]
+    rescue Exception => e
+      [false, "Error: #{e.message}"]
+    end
   end
 end
 

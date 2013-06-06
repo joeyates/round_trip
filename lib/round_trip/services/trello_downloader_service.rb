@@ -1,33 +1,35 @@
 require 'round_trip/models/ticket'
 require 'round_trip/trello/authorizer'
 
-class RoundTrip::TrelloDownloaderService
-  attr_reader :round_trip_project
+module RoundTrip
+  class TrelloDownloaderService
+    attr_reader :project
 
-  def initialize(round_trip_project)
-    @round_trip_project = round_trip_project
-  end
-
-  def run
-    raise 'No board_id set' if board_id.nil?
-    RoundTrip::Ticket.where(:trello_board_id => board_id).destroy_all
-    authorizer = RoundTrip::Trello::Authorizer.new(
-      round_trip_project.config[:trello_key],
-      round_trip_project.config[:trello_secret],
-      round_trip_project.config[:trello_token],
-    )
-    board = authorizer.client.find(:boards, board_id)
-    cards = board.cards
-    cards.each do |card|
-      RoundTrip::Ticket.create_from_trello_card(card)
+    def initialize(project)
+      @project = project
     end
-    RoundTrip.logger.info "#{cards.size} tickets imported from Trello board '#{board.name}'"
-  end
 
-  private
+    def run
+      raise 'No board_id set' if board_id.nil?
+      Ticket.where(:trello_board_id => board_id).destroy_all
+      authorizer = Trello::Authorizer.new(
+        project.config[:trello_key],
+        project.config[:trello_secret],
+        project.config[:trello_token],
+      )
+      board = authorizer.client.find(:boards, board_id)
+      cards = board.cards
+      cards.each do |card|
+        Ticket.create_from_trello_card(card)
+      end
+      RoundTrip.logger.info "#{cards.size} tickets imported from Trello board '#{board.name}'"
+    end
 
-  def board_id
-    round_trip_project.config[:trello_board_id]
+    private
+
+    def board_id
+      project.config[:trello_board_id]
+    end
   end
 end
 

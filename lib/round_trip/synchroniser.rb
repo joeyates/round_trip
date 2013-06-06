@@ -1,11 +1,11 @@
 require 'round_trip/services/project_synchroniser_service'
 
-module RoundTrip; end
-
-class RoundTrip::Synchroniser
-  def run
-    RoundTrip::Project.all.each do |project|
-      RoundTrip::ProjectSynchroniserService.new(project).run
+module RoundTrip
+  class Synchroniser
+    def run
+      Project.all.each do |project|
+        ProjectSynchroniserService.new(project).run
+      end
     end
   end
 end

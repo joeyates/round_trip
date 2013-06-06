@@ -1,6 +1,8 @@
-class RoundTrip::MatchedTicketUpdaterService
-  def run
-    united = RoundTrip::Ticket.united
+module RoundTrip
+  class MatchedTicketUpdaterService
+    def run
+      united = Ticket.united
+    end
   end
 end
 

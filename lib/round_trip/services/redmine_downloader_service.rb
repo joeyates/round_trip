@@ -1,35 +1,37 @@
 require 'round_trip/models'
 require 'round_trip/redmine/resource'
 
-class RoundTrip::RedmineDownloaderService
-  attr_reader :round_trip_project
+module RoundTrip
+  class RedmineDownloaderService
+    attr_reader :project
 
-  def initialize(round_trip_project)
-    @round_trip_project = round_trip_project
-    raise 'No project_id set' if project_id.nil?
-  end
-
-  def run
-    RoundTrip::Ticket.where(:redmine_project_id => project_id).destroy_all
-    RoundTrip::Redmine::Resource.setup(
-      url,
-      round_trip_project.config[:redmine_key]
-    )
-    issue_resources = RoundTrip::Redmine::Issue.find(:all, :params => {:project_id => project_id})
-    issue_resources.each do |r|
-      RoundTrip::Ticket.create_from_redmine_resource(r)
+    def initialize(project)
+      @project = project
+      raise 'No project_id set' if project_id.nil?
     end
-    RoundTrip.logger.info "#{issue_resources.size} tickets imported from Redmine project #{project_id} at #{url}"
-  end
 
-  private
+    def run
+      Ticket.where(:redmine_project_id => project_id).destroy_all
+      Redmine::Resource.setup(
+        url,
+        project.config[:redmine_key]
+      )
+      issue_resources = Redmine::Issue.find(:all, :params => {:project_id => project_id})
+      issue_resources.each do |r|
+        Ticket.create_from_redmine_resource(r)
+      end
+      RoundTrip.logger.info "#{issue_resources.size} tickets imported from Redmine project #{project_id} at #{url}"
+    end
 
-  def project_id
-    round_trip_project.config[:redmine_project_id]
-  end
+    private
 
-  def url
-    round_trip_project.config[:redmine_url]
+    def project_id
+      project.config[:redmine_project_id]
+    end
+
+    def url
+      project.config[:redmine_url]
+    end
   end
 end
 

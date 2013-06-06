@@ -1,6 +1,6 @@
-class CreateRoundTripTickets  < ActiveRecord::Migration
+class CreateTickets  < ActiveRecord::Migration
   def self.up
-    create_table :round_trip_tickets do |t|
+    create_table :tickets do |t|
       t.integer   :redmine_id
       t.integer   :redmine_project_id
       t.string    :redmine_subject
@@ -18,7 +18,7 @@ class CreateRoundTripTickets  < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :round_trip_tickets
+    drop_table :tickets
   end
 end
 

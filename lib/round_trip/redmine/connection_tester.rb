@@ -1,22 +1,23 @@
-module RoundTrip; end
-module RoundTrip::Redmine; end
+module RoundTrip
+  module Redmine; end
 
-class RoundTrip::Redmine::ConnectionTester
-  attr_reader :round_trip_project
+  class Redmine::ConnectionTester
+    attr_reader :project
 
-  def initialize(round_trip_project)
-    @round_trip_project = round_trip_project
-  end
+    def initialize(project)
+      @project = project
+    end
 
-  def run
-    RoundTrip::Redmine::Resource.setup(
-      round_trip_project.config[:redmine_url],
-      round_trip_project.config[:redmine_key]
-    )
-    RoundTrip::Redmine::Project.find(round_trip_project.config[:redmine_project_id])
-    [true, "It works"]
-  rescue Exception => e
-    [false, "Error: #{e.message}"]
+    def run
+      Redmine::Resource.setup(
+        project.config[:redmine_url],
+        project.config[:redmine_key]
+      )
+      Redmine::Project.find(project.config[:redmine_project_id])
+      [true, "It works"]
+    rescue Exception => e
+      [false, "Error: #{e.message}"]
+    end
   end
 end
 
