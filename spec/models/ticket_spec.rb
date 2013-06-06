@@ -112,7 +112,7 @@ module RoundTrip
     end
 
     context 'associations' do
-      it 'belongs to a project'
+      it { should belong_to(:project) }
     end
 
     context 'validations' do
