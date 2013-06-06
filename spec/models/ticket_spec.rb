@@ -110,6 +110,10 @@ describe RoundTrip::Ticket do
     it 'leaves other fields unchanged'
   end
 
+  context 'associations' do
+    it 'belongs to a project'
+  end
+
   describe '#merge_redmine' do
     let(:trello_ticket) { create(:ticket) }
     let(:redmine_ticket) { create(:redmine_ticket) }
