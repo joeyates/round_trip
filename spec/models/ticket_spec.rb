@@ -50,7 +50,7 @@ module RoundTrip
         let(:card_description_with_redmine_id) { "## Redmine issue id: #{redmine_issue_id} ##\n#{card_attributes[:description]}" }
         let(:ticket_attributes_with_redmine_id) do
           ticket_attributes.merge(
-            :trello_desc => card_description_with_redmine_id,
+            :trello_description => card_description_with_redmine_id,
             :trello_redmine_id => redmine_issue_id,
           )
         end

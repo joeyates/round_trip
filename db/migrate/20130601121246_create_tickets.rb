@@ -9,7 +9,7 @@ class CreateTickets  < ActiveRecord::Migration
       t.string    :trello_id
       t.string    :trello_board_id
       t.string    :trello_name
-      t.text      :trello_desc
+      t.text      :trello_description
       t.datetime  :trello_last_activity_date
       t.string    :trello_list_id
       t.string    :trello_url

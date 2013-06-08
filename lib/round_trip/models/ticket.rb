@@ -18,7 +18,7 @@ module RoundTrip
   trello_board_id            string    
   trello_list_id             string    
   trello_name                string    
-  trello_desc                text      
+  trello_description         text
   trello_last_activity_date  datetime  
   trello_url                 string    
   trello_closed              boolean   
@@ -61,7 +61,7 @@ module RoundTrip
         :trello_board_id => card.board_id,
         :trello_list_id => card.list_id,
         :trello_name => card.name,
-        :trello_desc => card.description,
+        :trello_description => card.description,
         :trello_last_activity_date => card.last_activity_date,
         :trello_url => card.url,
         :trello_closed => card.closed,

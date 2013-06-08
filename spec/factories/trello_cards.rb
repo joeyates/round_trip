@@ -6,7 +6,7 @@ FactoryGirl.define do
     board_id            { generate(:trello_board_id) }
     list_id             { generate(:trello_list_id) }
     name                { generate(:trello_name) }
-    description         { generate(:trello_desc) }
+    description         { generate(:trello_description) }
     last_activity_date  { generate(:trello_last_activity_date) }
     url                 { generate(:trello_url) }
     closed              false

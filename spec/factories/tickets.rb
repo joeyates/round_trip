@@ -3,7 +3,7 @@ FactoryGirl.define do
   sequence(:trello_board_id)
   sequence(:trello_list_id)
   sequence(:trello_name)               { |n| "Name #{n}" }
-  sequence(:trello_desc)               { |n| "Description #{n}" }
+  sequence(:trello_description)        { |n| "Description #{n}" }
   sequence(:trello_last_activity_date) { |n| DateTime.now - n }
   sequence(:trello_url)                { |n| "http://trello.com/card/#{n}" }
 
@@ -23,7 +23,7 @@ FactoryGirl.define do
       trello_board_id              { generate(:trello_board_id) }
       trello_list_id               { generate(:trello_list_id) }
       trello_name                  { generate(:trello_name) }
-      trello_desc                  { generate(:trello_desc) }
+      trello_description           { generate(:trello_description) }
       trello_last_activity_date    { generate(:trello_last_activity_date) }
       trello_url                   { generate(:trello_url) }
       trello_closed                false
@@ -35,7 +35,7 @@ FactoryGirl.define do
         board_id                 { generate(:trello_board_id) }
         list_id                  { generate(:trello_list_id) }
         name                     { generate(:trello_name) }
-        description              { generate(:trello_desc) }
+        description              { generate(:trello_description) }
         last_activity_date       { generate(:trello_last_activity_date) }
         url                      { generate(:trello_url) }
         closed false
@@ -45,7 +45,7 @@ FactoryGirl.define do
       trello_board_id              { board_id }
       trello_list_id               { list_id }
       trello_name                  { name }
-      trello_desc                  { description }
+      trello_description           { description }
       trello_last_activity_date    { last_activity_date }
       trello_url                   { url }
       trello_closed                false
