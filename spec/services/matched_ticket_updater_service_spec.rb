@@ -2,13 +2,7 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe MatchedTicketUpdaterService do
-    describe '.initialize' do
-      it 'expects a project' do
-        expect {
-          MatchedTicketUpdaterService.new
-        }.to raise_error(ArgumentError, 'wrong number of arguments (0 for 1)')
-      end
-    end
+    it_behaves_like 'a class with construtor arity', 1
 
     describe '#run' do
       let(:project) { create(:project) }

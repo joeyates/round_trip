@@ -2,6 +2,8 @@ require 'spec_helper'
 
 module RoundTrip
   describe TrelloCardPreparerService do
+    it_behaves_like 'a class with construtor arity', 1
+
     describe '.initialize' do
       it 'expects a project'
     end
