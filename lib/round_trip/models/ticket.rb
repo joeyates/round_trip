@@ -38,6 +38,7 @@ module RoundTrip
     scope :for_project, ->(project_id) { where(project_id: project_id) }
     scope :for_redmine_project, ->(redmine_project_id) { where(:redmine_project_id => redmine_project_id) }
     scope :for_trello_board, ->(trello_board_id) { where(:trello_board_id => trello_board_id) }
+    scope :redmine_newer, ->(project_id) { united.for_project(project_id).where(at[:redmine_updated_on].gt(at[:trello_last_activity_date])) }
     scope :trello_newer, ->(project_id) { united.for_project(project_id).where(at[:trello_last_activity_date].gt(at[:redmine_updated_on])) }
 
     def self.create_from_redmine_resource(resource)
