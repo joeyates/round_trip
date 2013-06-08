@@ -25,6 +25,7 @@ module RoundTrip
       let(:ticket_merger_service) { stub('TicketMergerService', :run => nil) }
       let(:matched_ticket_updater_service) { stub('MatchedTicketUpdaterService', :run => nil) }
       let(:trello_card_preparer_service) { stub('TrelloCardPreparerService', :run => nil) }
+      let(:redmine_issue_preparer_service) { stub('RedmineIssuePreparerService', :run => nil) }
 
       subject { ProjectSynchroniserService.new(project) }
 
@@ -34,6 +35,7 @@ module RoundTrip
         TicketMergerService.stubs(:new).with(project).returns(ticket_merger_service)
         MatchedTicketUpdaterService.stubs(:new).with(project).returns(matched_ticket_updater_service)
         TrelloCardPreparerService.stubs(:new).with(project).returns(trello_card_preparer_service)
+        RedmineIssuePreparerService.stubs(:new).with(project).returns(redmine_issue_preparer_service)
         subject.run
       end
 
@@ -61,7 +63,10 @@ module RoundTrip
         expect(TrelloCardPreparerService).to have_received(:new).with(project)
       end
 
-      it 'prepares unmatched trello tickets for redmine'
+      it 'prepares unmatched trello tickets for redmine' do
+        expect(RedmineIssuePreparerService).to have_received(:new).with(project)
+      end
+
       it 'sets redmine and trello ids in the description'
       it 'pushes changed data to redmine'
       it 'pushes changed data to trello'
