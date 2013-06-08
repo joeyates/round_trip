@@ -1,5 +1,5 @@
 module SharedExamplesForModels
-  shared_examples_for 'a class with construtor arity' do |count|
+  shared_examples_for 'a class with constructor arity' do |count|
     if count > 0
       it "raises an error unless #{count} #{count == 1? 'parameter is' : 'parameters are'} supplied" do
         expect {

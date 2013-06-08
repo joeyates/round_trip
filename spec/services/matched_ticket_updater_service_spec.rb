@@ -2,9 +2,10 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe MatchedTicketUpdaterService do
-    it_behaves_like 'a class with construtor arity', 1
+    it_behaves_like 'a class with constructor arity', 1
 
     describe '#run' do
+      include_context 'ticket project scoping'
       let(:project) { create(:project) }
       let(:old) { 10.days.ago }
       let(:new) { 2.days.ago }
@@ -44,17 +45,23 @@ module RoundTrip
       subject { MatchedTicketUpdaterService.new(project) }
 
       before do
-        Ticket.stubs(:redmine_newer).returns([recent_redmine])
-        Ticket.stubs(:trello_newer).returns([recent_trello])
+        for_project_scope.stubs(:redmine_newer).returns([recent_redmine])
+        for_project_scope.stubs(:trello_newer).returns([recent_trello])
         recent_redmine.stubs(:save!)
         recent_trello.stubs(:save!)
+      end
+
+      it 'searches among project tickets' do
+        subject.run
+
+        expect(Ticket).to have_received(:for_project).with(project.id)
       end
 
       context 'where redmine is more recent' do
         it 'finds tickets' do
           subject.run
 
-          expect(Ticket).to have_received(:redmine_newer).with(project.id)
+          expect(for_project_scope).to have_received(:redmine_newer)
         end
 
         [
@@ -83,7 +90,7 @@ module RoundTrip
         it 'finds tickets' do
           subject.run
 
-          expect(Ticket).to have_received(:trello_newer).with(project.id)
+          expect(for_project_scope).to have_received(:trello_newer)
         end
 
         [
