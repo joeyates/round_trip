@@ -4,7 +4,7 @@ FactoryGirl.define do
   sequence(:trello_list_id)
   sequence(:trello_name)               { |n| "Name #{n}" }
   sequence(:trello_desc)               { |n| "Description #{n}" }
-  sequence(:trello_last_activity_date) { |n| (DateTime.now - n).strftime("%Y/%m/%d %H:%M:%S %Z") }
+  sequence(:trello_last_activity_date) { |n| DateTime.now - n }
   sequence(:trello_url)                { |n| "http://trello.com/card/#{n}" }
 
   factory :ticket, :class => RoundTrip::Ticket do
@@ -15,7 +15,7 @@ FactoryGirl.define do
       sequence(:redmine_project_id) { |id| id }
       sequence(:redmine_subject) { |n| "Subject #{n}" }
       sequence(:redmine_description) { |n| "Description #{n}" }
-      redmine_updated_on DateTime.now.strftime("%Y/%m/%d %H:%M:%S %Z")
+      redmine_updated_on DateTime.now
     end
 
     trait :with_trello_data do

@@ -1,7 +1,10 @@
 module RoundTrip
   class MatchedTicketUpdaterService
     def run
-      united = Ticket.united
+      Ticket.trello_newer.each do |t|
+        t.redmine_subject = t.trello_name
+        t.save!
+      end
     end
   end
 end
