@@ -14,5 +14,15 @@ module SharedExamplesForModels
       end
     end
   end
+
+  shared_context 'ticket project scoping' do
+    let(:project_attriutes) { attributes_for(:project) }
+    let(:project) { create(:project, project_attriutes) }
+    let(:for_project_scope) { stub('ActiveRecord::Relation Ticket.for_project scope') }
+
+    before do
+      RoundTrip::Ticket.stubs(:for_project).with(project.id).returns(for_project_scope)
+    end
+  end
 end
 

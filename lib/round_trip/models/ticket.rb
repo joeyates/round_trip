@@ -34,8 +34,8 @@ module RoundTrip
     scope :for_trello_board,      ->(trello_board_id) { where(:trello_board_id => trello_board_id) }
     scope :united,                where(at[:redmine_id].not_eq(nil).and(at[:trello_id].not_eq(nil)))
     scope :not_united,            where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil)))
-    scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
     scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
+    scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
     scope :redmine_newer,         united.where(at[:redmine_updated_on].gt(at[:trello_last_activity_date]))
     scope :trello_newer,          united.where(at[:trello_last_activity_date].gt(at[:redmine_updated_on]))
 

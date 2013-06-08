@@ -13,11 +13,15 @@ module RoundTrip
 
       Ticket.check_repeated_redmine_ids(project.config[:redmine_project_id])
       Ticket.check_repeated_trello_ids(project.config[:trello_board_id])
-      trello_with_redmine_id = Ticket.trello_has_redmine_id.not_united
+      trello_with_redmine_id = Ticket.for_project(project.id).trello_has_redmine_id.not_united
       trello_with_redmine_id.all.each do |trello_ticket|
-        redmine_ticket = Ticket.find(trello_ticket.trello_redmine_id)
+        redmine_ticket = load_redmine_ticket(trello_ticket)
         trello_ticket.merge_redmine redmine_ticket
       end
+    end
+
+    def load_redmine_ticket(trello_ticket)
+      Ticket.where(redmine_id: trello_ticket.trello_redmine_id).first or raise ActiveRecord::RecordNotFound
     end
   end
 end
