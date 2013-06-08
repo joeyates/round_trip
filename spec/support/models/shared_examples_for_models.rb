@@ -16,8 +16,8 @@ module SharedExamplesForModels
   end
 
   shared_context 'ticket project scoping' do
-    let(:project_attriutes) { attributes_for(:project) }
-    let(:project) { create(:project, project_attriutes) }
+    let(:project_attributes) { attributes_for(:project) }
+    let(:project) { create(:project, project_attributes) }
     let(:for_project_scope) { stub('ActiveRecord::Relation Ticket.for_project scope') }
 
     before do

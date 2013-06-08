@@ -104,12 +104,32 @@ module RoundTrip
       to.redmine_updated_on  = from.redmine_updated_on
     end
 
+    def self.copy_trello_fields(from, to)
+      to.trello_id  = from.trello_id
+      to.trello_board_id  = from.trello_board_id
+      to.trello_list_id  = from.trello_list_id
+      to.trello_name  = from.trello_name
+      to.trello_description  = from.trello_description
+      to.trello_last_activity_date  = from.trello_last_activity_date
+      to.trello_url  = from.trello_url
+      to.trello_closed  = from.trello_closed
+    end
+
     def merge_redmine(redmine_ticket)
       self.class.copy_redmine_fields(redmine_ticket, self)
 
       self.redmine_trello_id = self.trello_id
 
       redmine_ticket.destroy
+      save!
+    end
+
+    def merge_trello(trello_ticket)
+      self.class.copy_trello_fields(trello_ticket, self)
+
+      self.trello_redmine_id = self.redmine_id
+
+      trello_ticket.destroy
       save!
     end
   end
