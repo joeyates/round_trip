@@ -2,9 +2,7 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe ProjectSynchroniserService do
-    describe '.initialize' do
-      it 'expects a project'
-    end
+    it_behaves_like 'a class with constructor arity', 1
 
     describe '#run' do
       let(:trello_board_id) { 'aaa' }
