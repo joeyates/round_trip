@@ -85,31 +85,35 @@ module RoundTrip
         expect(Ticket).to have_received(:for_project).with(project.id)
       end
 
-      context 'where trello id is in redmine issue' do
-        it 'extracts un-united tickets' do
-          subject.run
+      it 'extracts un-united tickets' do
+        subject.run
 
-          expect(for_project_scope).to have_received(:not_united)
-        end
+        expect(for_project_scope).to have_received(:not_united)
+      end
 
+      context 'where redmine issue has trello id' do
         it 'requests suitable tickets' do
           subject.run
 
           expect(not_united_relation).to have_received(:redmine_has_trello_id)
         end
 
-        it 'fails if the matching trello ticket is missing'
-        it 'merges the trello data into the redmine ticket'
-        it 'deletes the trello ticket'
-      end
+        it 'fails if the matching trello ticket is missing' do
+          Ticket.stubs(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).raises(ActiveRecord::RecordNotFound)
 
-      context 'where redmine id is in trello card' do
-        it 'extracts un-united tickets' do
-          subject.run
-
-          expect(for_project_scope).to have_received(:not_united)
+          expect {
+            subject.run
+          }.to raise_error
         end
 
+        it 'merges the trello data into the redmine ticket' do
+          subject.run
+
+          expect(redmine_ticket).to have_received(:merge_trello).with(trello_ticket_merged_to_redmine)
+        end
+      end
+
+      context 'where trello card has redmine id' do
         it 'requests suitable tickets' do
           subject.run
 
@@ -129,13 +133,15 @@ module RoundTrip
 
           expect(trello_ticket).to have_received(:merge_redmine).with(redmine_ticket_merged_to_trello)
         end
-
-        it 'deletes the redmine ticket'
       end
 
       context 'titles match' do
-        it 'requests suitable tickets'
-        it 'extracts un-united tickets'
+        it 'requests suitable tickets' do
+          subject.run
+
+          expect(not_united_relation).to have_received(:matching_titles)
+        end
+
         it 'merges the trello data into the redmine ticket'
         it 'deletes the trello ticket'
       end
