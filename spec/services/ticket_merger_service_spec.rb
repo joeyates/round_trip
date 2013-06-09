@@ -11,7 +11,7 @@ module RoundTrip
       let(:trello_ticket_merged_to_redmine) { create(:trello_ticket, project: project) }
       let(:redmine_ticket) do
         t = create(:redmine_ticket, redmine_trello_id: trello_ticket_merged_to_redmine.trello_id, project: project)
-        t.stubs(:merge_redmine)
+        t.stubs(:merge_trello)
         t.stubs(:save!)
         t
       end
