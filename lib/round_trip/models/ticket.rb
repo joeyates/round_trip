@@ -135,6 +135,8 @@ module RoundTrip
     end
 
     def merge_redmine(redmine_ticket)
+      raise ArgumentError.new("Projects do not match") if project_id != redmine_ticket.project_id
+
       copy_redmine_fields(redmine_ticket)
 
       self.redmine_trello_id = self.trello_id
@@ -144,6 +146,8 @@ module RoundTrip
     end
 
     def merge_trello(trello_ticket)
+      raise ArgumentError.new("Projects do not match") if project_id != trello_ticket.project_id
+
       copy_trello_fields(trello_ticket)
 
       self.trello_redmine_id = self.redmine_id

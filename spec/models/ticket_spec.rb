@@ -2,9 +2,11 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe Ticket do
-    context 'create_from_* methods' do
-      let(:project) { create(:project) }
+    let(:project) { create(:project) }
+    let(:redmine_ticket) { create(:redmine_ticket, project: project) }
+    let(:trello_ticket) { create(:trello_ticket, project: project) }
 
+    context 'create_from_* methods' do
       before do
         Ticket.stubs(:create!).with(anything)
       end
@@ -156,13 +158,21 @@ module RoundTrip
     end
 
     describe '#merge_redmine' do
-      let(:trello_ticket) { create(:trello_ticket) }
-      let(:redmine_ticket) { create(:redmine_ticket) }
-
       before do
         redmine_ticket.stubs(:destroy)
         trello_ticket.stubs(:save!)
         trello_ticket.merge_redmine(redmine_ticket)
+      end
+
+      it 'fails if the tickets belong to different projects' do
+        project_1 = create(:project)
+        project_2 = create(:project)
+        redmine_ticket = create(:redmine_ticket, project: project_1)
+        trello_ticket = create(:trello_ticket, project: project_2)
+
+        expect {
+          trello_ticket.merge_redmine(redmine_ticket)
+        }.to raise_error
       end
 
       it 'copies the redmine data to the trello ticket' do
@@ -188,16 +198,25 @@ module RoundTrip
     end
 
     describe '#merge_trello' do
-      let(:redmine_ticket) { create(:redmine_ticket) }
-      let(:trello_ticket) { create(:trello_ticket) }
-
       before do
         trello_ticket.stubs(:destroy)
         redmine_ticket.stubs(:save!)
-        redmine_ticket.merge_trello(trello_ticket)
+      end
+
+      it 'fails if the tickets belong to different projects' do
+        project_1 = create(:project)
+        project_2 = create(:project)
+        redmine_ticket = create(:redmine_ticket, project: project_1)
+        trello_ticket = create(:trello_ticket, project: project_2)
+
+        expect {
+          redmine_ticket.merge_trello(trello_ticket)
+        }.to raise_error
       end
 
       it 'copies the trello data to the redmine ticket' do
+        redmine_ticket.merge_trello(trello_ticket)
+
         expect(redmine_ticket.trello_id).to eq(trello_ticket.trello_id)
         expect(redmine_ticket.redmine_trello_id).to eq(redmine_ticket.trello_id)
         expect(redmine_ticket.trello_board_id).to eq(trello_ticket.trello_board_id)
@@ -210,14 +229,20 @@ module RoundTrip
       end
 
       it 'copies the redmine id to the trello data' do
+        redmine_ticket.merge_trello(trello_ticket)
+
         expect(redmine_ticket.trello_redmine_id).to eq(redmine_ticket.redmine_id)
       end
 
       it 'destroys the trello ticket' do
+        redmine_ticket.merge_trello(trello_ticket)
+
         expect(trello_ticket).to have_received(:destroy)
       end
 
       it 'saves the redmine ticket' do
+        redmine_ticket.merge_trello(trello_ticket)
+
         expect(redmine_ticket).to have_received(:save!)
       end
     end
