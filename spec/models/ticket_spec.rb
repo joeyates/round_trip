@@ -96,12 +96,48 @@ module RoundTrip
       end
 
       it 'raises an error for duplicate trello ids' do
-        result = {87654 => 2, 12345 => 3}
+        result = {87654 => 2}
         redmine_has_trello_id_relation.stubs(:for_trello_board => stub(:group => stub(:having => stub(:count => result))))
 
         expect {
           Ticket.check_repeated_trello_ids(123)
         }.to raise_error(RuntimeError, /\d+ Redmine issues found with the same Trello card id: \d+/)
+      end
+    end
+
+    describe '.check_repeated_redmine_subjects' do
+      let(:for_redmine_project_relation) { stub('ActiveRecord::Relation') }
+      let(:redmine_subject_1) { 'Subject 1' }
+
+      before do
+        Ticket.stubs(:for_redmine_project).returns(for_redmine_project_relation)
+      end
+
+      it 'raises an error for repeated redmine issue subjects' do
+        result = {redmine_subject_1 => 2}
+        for_redmine_project_relation.stubs(:group => stub(:having => stub(:count => result)))
+
+        expect {
+          Ticket.check_repeated_redmine_subjects(123)
+        }.to raise_error(RuntimeError, "2 Redmine issues found with the same subject: #{redmine_subject_1}")
+      end
+    end
+
+    describe '.check_repeated_trello_names' do
+      let(:for_trello_board_relation) { stub('ActiveRecord::Relation') }
+      let(:trello_name_1) { 'Subject 1' }
+
+      before do
+        Ticket.stubs(:for_trello_board).returns(for_trello_board_relation)
+      end
+
+      it 'raises an error for repeated trello card names' do
+        result = {trello_name_1 => 2}
+        for_trello_board_relation.stubs(:group => stub(:having => stub(:count => result)))
+
+        expect {
+          Ticket.check_repeated_trello_names(123)
+        }.to raise_error(RuntimeError, "2 Trello cards found with the same name: #{trello_name_1}")
       end
     end
 

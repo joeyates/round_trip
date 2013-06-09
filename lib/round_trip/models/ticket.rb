@@ -96,6 +96,28 @@ module RoundTrip
       raise errors
     end
 
+    def self.check_repeated_redmine_subjects(redmine_project_id)
+      repeated_subjects = for_redmine_project(redmine_project_id).group('redmine_subject').having('count() > 1').count
+      return if repeated_subjects.keys.size == 0
+
+      errors = repeated_subjects.map do |redmine_subject, count|
+        "#{count} Redmine issues found with the same subject: #{redmine_subject}"
+      end.join("\n")
+
+      raise errors
+    end
+
+    def self.check_repeated_trello_names(trello_board_id)
+      repeated_subjects = for_trello_board(trello_board_id).group('trello_name').having('count() > 1').count
+      return if repeated_subjects.keys.size == 0
+
+      errors = repeated_subjects.map do |trello_name, count|
+        "#{count} Trello cards found with the same name: #{trello_name}"
+      end.join("\n")
+
+      raise errors
+    end
+
     def self.copy_redmine_fields(from, to)
       to.redmine_id          = from.redmine_id
       to.redmine_project_id  = from.redmine_project_id

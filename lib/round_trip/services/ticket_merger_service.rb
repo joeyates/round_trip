@@ -12,6 +12,8 @@ module RoundTrip
 
       Ticket.check_repeated_redmine_ids(project.config[:redmine_project_id])
       Ticket.check_repeated_trello_ids(project.config[:trello_board_id])
+      Ticket.check_repeated_redmine_subjects(project.config[:redmine_project_id])
+      Ticket.check_repeated_trello_names(project.config[:trello_board_id])
 
       not_united = Ticket.for_project(project.id).not_united
 

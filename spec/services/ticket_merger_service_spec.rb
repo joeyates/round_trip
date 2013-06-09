@@ -32,6 +32,8 @@ module RoundTrip
         trello_ticket
         Ticket.stubs(:check_repeated_redmine_ids).with(redmine_project_id)
         Ticket.stubs(:check_repeated_trello_ids).with(trello_board_id)
+        Ticket.stubs(:check_repeated_redmine_subjects).with(redmine_project_id)
+        Ticket.stubs(:check_repeated_trello_names).with(trello_board_id)
         Ticket.stubs(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).returns([redmine_ticket_merged_to_trello])
         Ticket.stubs(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).returns([trello_ticket_merged_to_redmine])
         for_project_scope.stubs(:not_united).returns(not_united_relation)
@@ -68,7 +70,13 @@ module RoundTrip
           expect(Ticket).to have_received(:check_repeated_trello_ids).with(trello_board_id)
         end
 
-        it 'checks if there are duplicate titles'
+        it 'checks if there are duplicate redmine subjects' do
+          expect(Ticket).to have_received(:check_repeated_redmine_subjects).with(redmine_project_id)
+        end
+
+        it 'checks if there are duplicate trello names' do
+          expect(Ticket).to have_received(:check_repeated_trello_names).with(trello_board_id)
+        end
       end
 
       it 'searches among project tickets' do
