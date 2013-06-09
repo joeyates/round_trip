@@ -26,6 +26,9 @@ module RoundTrip
         trello_ticket = load_trello_ticket(redmine_ticket)
         redmine_ticket.merge_trello trello_ticket
       end
+
+      not_united.redmine_subject_with_matching_trello_name.all.each do |redmine_ticket|
+      end
     end
 
     private
