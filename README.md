@@ -9,6 +9,10 @@ Bidirectional sychronisation between Redmine and Trello tickets.
 
 RoundTrip is normally run as a cron job.
 
+# Warning
+
+This is pre-alpha software - do not use!
+
 Assumptions
 ===========
 
