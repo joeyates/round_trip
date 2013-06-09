@@ -45,7 +45,7 @@ module RoundTrip
         Ticket.stubs(:where).with(:trello_board_id => trello_board_id).returns(tickets_relation)
         Trello::Authorizer.stubs(:new).with(*trello_authorization_config).returns(authorizer)
         client.stubs(:find).with(:boards, trello_board_id).returns(board)
-        Ticket.stubs(:create_from_trello_card).with(card)
+        Ticket.stubs(:create_from_trello_card).with(project, card)
         subject.run
       end
 
@@ -66,7 +66,7 @@ module RoundTrip
       end
 
       it 'creates tickets' do
-        expect(Ticket).to have_received(:create_from_trello_card).with(card)
+        expect(Ticket).to have_received(:create_from_trello_card).with(project, card)
       end
     end
   end
