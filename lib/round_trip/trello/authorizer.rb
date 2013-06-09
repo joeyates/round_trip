@@ -12,7 +12,7 @@ module RoundTrip
     end
 
     def client
-      @client ||= Trello::Client.new(
+      @client ||= ::Trello::Client.new(
         :consumer_key => key,
         :consumer_secret => secret,
         :oauth_token => token,
