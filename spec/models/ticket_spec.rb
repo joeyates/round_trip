@@ -167,6 +167,7 @@ module RoundTrip
 
       it 'copies the redmine data to the trello ticket' do
         expect(trello_ticket.redmine_id).to eq(redmine_ticket.redmine_id)
+        expect(trello_ticket.trello_redmine_id).to eq(redmine_ticket.redmine_id)
         expect(trello_ticket.redmine_project_id).to eq(redmine_ticket.redmine_project_id)
         expect(trello_ticket.redmine_subject).to eq(redmine_ticket.redmine_subject)
         expect(trello_ticket.redmine_description).to eq(redmine_ticket.redmine_description)
@@ -198,6 +199,7 @@ module RoundTrip
 
       it 'copies the trello data to the redmine ticket' do
         expect(redmine_ticket.trello_id).to eq(trello_ticket.trello_id)
+        expect(redmine_ticket.redmine_trello_id).to eq(redmine_ticket.trello_id)
         expect(redmine_ticket.trello_board_id).to eq(trello_ticket.trello_board_id)
         expect(redmine_ticket.trello_list_id).to eq(trello_ticket.trello_list_id)
         expect(redmine_ticket.trello_name).to eq(trello_ticket.trello_name)

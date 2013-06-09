@@ -156,6 +156,7 @@ module RoundTrip
 
     def copy_redmine_fields(from)
       self.redmine_id          = from.redmine_id
+      self.trello_redmine_id   = from.redmine_id
       self.redmine_project_id  = from.redmine_project_id
       self.redmine_subject     = from.redmine_subject
       self.redmine_description = from.redmine_description
@@ -163,14 +164,15 @@ module RoundTrip
     end
 
     def copy_trello_fields(from)
-      self.trello_id  = from.trello_id
-      self.trello_board_id  = from.trello_board_id
-      self.trello_list_id  = from.trello_list_id
-      self.trello_name  = from.trello_name
-      self.trello_description  = from.trello_description
+      self.trello_id                  = from.trello_id
+      self.redmine_trello_id          = from.trello_id
+      self.trello_board_id            = from.trello_board_id
+      self.trello_list_id             = from.trello_list_id
+      self.trello_name                = from.trello_name
+      self.trello_description         = from.trello_description
       self.trello_last_activity_date  = from.trello_last_activity_date
-      self.trello_url  = from.trello_url
-      self.trello_closed  = from.trello_closed
+      self.trello_url                 = from.trello_url
+      self.trello_closed              = from.trello_closed
     end
   end
 end
