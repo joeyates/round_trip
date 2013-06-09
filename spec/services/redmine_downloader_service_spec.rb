@@ -2,6 +2,8 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe RedmineDownloaderService do
+    it_behaves_like 'a class with constructor arity', 1
+
     let(:redmine_project_id) { 12345 }
     let(:redmine_url) { 'http://example.com' }
     let(:redmine_key) { 'aaaa' }
@@ -18,10 +20,6 @@ module RoundTrip
       [:all, :params => {:project_id => redmine_project_id}]
     end
     let(:issue_resource) { stub('Redmine::Issue') }
-
-    describe '.initialize' do
-      it 'expects a project'
-    end
 
     describe '#run' do
       subject { RedmineDownloaderService.new(project) }
