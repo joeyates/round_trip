@@ -9,6 +9,10 @@ module RoundTrip
         Ticket.stubs(:create!).with(anything)
       end
 
+      describe '.redmine_subject_with_matching_trello_name' do
+        it 'returns redmine tickets which have a matching trello ticket (by title)'
+      end
+
       describe '.create_from_redmine_resource' do
         let(:trello_card_id) { 'abcdef' }
         let(:issue_description_with_trello_id) { "## Trello card id: #{trello_card_id} ##\nThe description\n" }

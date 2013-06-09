@@ -36,6 +36,7 @@ module RoundTrip
         Ticket.stubs(:check_repeated_trello_names).with(trello_board_id)
         Ticket.stubs(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).returns([redmine_ticket_merged_to_trello])
         Ticket.stubs(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).returns([trello_ticket_merged_to_redmine])
+        Ticket.stubs(:redmine_subject_with_matching_trello_name).with(project).returns([])
         for_project_scope.stubs(:not_united).returns(not_united_relation)
         not_united_relation.stubs(:redmine_has_trello_id).returns(redmine_has_trello_id_relation)
         not_united_relation.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
@@ -136,14 +137,26 @@ module RoundTrip
       end
 
       context 'titles match' do
+        let(:matching_title) { 'Matching Title' }
+        let(:redmine_ticket_with_matching_title) { create(:redmine_ticket, project: project, redmine_subject: matching_title) }
+        let(:trello_ticket_with_matching_title) { create(:trello_ticket, project: project, trello_name: matching_title) }
+
+        before do
+          Ticket.stubs(:redmine_subject_with_matching_trello_name).with(project).returns([redmine_ticket_with_matching_title])
+          redmine_ticket_with_matching_title.stubs(:merge_trello).with(trello_ticket_with_matching_title)
+        end
+
         it 'requests suitable tickets' do
           subject.run
 
-          expect(not_united_relation).to have_received(:matching_titles)
+          expect(Ticket).to have_received(:redmine_subject_with_matching_trello_name).with(project)
         end
 
-        it 'merges the trello data into the redmine ticket'
-        it 'deletes the trello ticket'
+        it 'merges the trello data into the redmine ticket' do
+          subject.run
+
+          expect(redmine_ticket_with_matching_title).to have_received(:merge_trello).with(trello_ticket_with_matching_title)
+        end
       end
     end
   end

@@ -41,6 +41,20 @@ module RoundTrip
     scope :redmine_newer,         united.where(at[:redmine_updated_on].gt(at[:trello_last_activity_date]))
     scope :trello_newer,          united.where(at[:trello_last_activity_date].gt(at[:redmine_updated_on]))
 
+    def self.redmine_subject_with_matching_trello_name(project)
+      query = <<-EOT
+      SELECT t1.*
+      FROM tickets t1
+        INNER JOIN tickets t2
+        ON t1.redmine_subject = t2.trello_name
+      WHERE
+        t1.project_id = #{project.id} and t2.project_id = #{project.id}
+        AND t1.trello_name IS NULL
+        AND t2.redmine_subject IS NULL
+      EOT
+      find_by_sql(query)
+    end
+
     def self.create_from_redmine_resource(project, resource)
       attributes = {
         :project_id          => project.id,
