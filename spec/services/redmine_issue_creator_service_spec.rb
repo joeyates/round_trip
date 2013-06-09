@@ -7,12 +7,19 @@ module RoundTrip
     describe '#run' do
       include_context 'ticket project scoping'
       let(:without_redmine_relation) { stub('ActiveRecord::Relation') }
-      let(:ticket_attributes) { attributes_for(:unpushed_redmine_ticket) }
+      let(:redmine_project_id) { generate(:redmine_project_id) }
+      let(:ticket_attributes) do
+        attributes_for(
+          :unpushed_redmine_ticket,
+          redmine_project_id: redmine_project_id
+        ).merge(project: project)
+      end
       let(:unpushed_redmine_ticket) { create(:ticket, ticket_attributes) }
       let(:issue_attributes) do
         {
           subject: ticket_attributes[:redmine_subject],
           description: ticket_attributes[:redmine_description],
+          project_id: redmine_project_id,
         }
       end
       let(:issue) { stub('ActiveResource::Base', save: nil) }

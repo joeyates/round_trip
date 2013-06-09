@@ -23,6 +23,7 @@ module RoundTrip
       {
         subject: ticket.redmine_subject,
         description: ticket.redmine_description,
+        project_id: ticket.redmine_project_id,
       }
     end
 
