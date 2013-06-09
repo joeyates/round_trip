@@ -17,6 +17,7 @@ module RoundTrip
           trello_description: trello_description_1,
         )
       end
+      let(:trello_id) { trello_ticket.trello_id }
 
       before do
         for_project_scope.stubs(:not_united).returns(not_united_relation)
@@ -45,7 +46,8 @@ module RoundTrip
       end
 
       [
-        [:trello_name, :redmine_subject, :trello_name_1],
+        [:trello_id,          :redmine_trello_id,   :trello_id],
+        [:trello_name,        :redmine_subject,     :trello_name_1],
         [:trello_description, :redmine_description, :trello_description_1],
       ].each do |from, to, let_name|
         it "copies #{from} to #{to}" do

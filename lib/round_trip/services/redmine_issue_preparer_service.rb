@@ -8,9 +8,10 @@ module RoundTrip
 
     def run
       Ticket.for_project(project.id).not_united.with_trello.each do |t|
-        t.redmine_subject = t.trello_name
-        t.redmine_description = t.trello_description
-        t.redmine_project_id = project.config[:redmine_project_id]
+        t.redmine_trello_id    = t.trello_id
+        t.redmine_subject      = t.trello_name
+        t.redmine_description  = t.trello_description
+        t.redmine_project_id   = project.config[:redmine_project_id]
         t.save!
       end
     end
