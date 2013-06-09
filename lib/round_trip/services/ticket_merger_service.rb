@@ -8,7 +8,6 @@ module RoundTrip
 
     def run
       raise 'redmine project id not set' if project.config[:redmine_project_id].nil?
-      raise 'redmine url not set' if project.config[:redmine_url].nil?
       raise 'trello board id not set' if project.config[:trello_board_id].nil?
 
       Ticket.check_repeated_redmine_ids(project.config[:redmine_project_id])

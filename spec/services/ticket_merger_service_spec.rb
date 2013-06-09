@@ -40,7 +40,7 @@ module RoundTrip
       end
 
       context 'config checks' do
-        [:redmine_project_id, :redmine_url, :trello_board_id].each do |key|
+        [:redmine_project_id, :trello_board_id].each do |key|
           name = key.to_s.gsub('_', ' ')
           it "expects a #{name}" do
             partial = project_attributes[:config].clone
