@@ -65,6 +65,12 @@ module RoundTrip
         end
       end
 
+      it 'sets the trello board id' do
+        subject.run
+
+        expect(redmine_ticket.trello_board_id).to eq(project.config[:trello_board_id])
+      end
+
       it 'saves' do
         subject.run
 

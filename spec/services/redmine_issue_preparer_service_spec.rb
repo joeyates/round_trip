@@ -65,6 +65,12 @@ module RoundTrip
         end
       end
 
+      it 'sets the redmine project id' do
+        subject.run
+
+        expect(trello_ticket.redmine_project_id).to eq(project.config[:redmine_project_id])
+      end
+
       it 'saves' do
         subject.run
 
