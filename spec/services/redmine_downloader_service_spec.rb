@@ -28,7 +28,7 @@ module RoundTrip
         Ticket.stubs(:where).with(:redmine_project_id => redmine_project_id).returns(tickets_relation)
         Redmine::Resource.stubs(:setup).with(redmine_url, redmine_key)
         Redmine::Issue.stubs(:find).with(*issue_find_params).returns([issue_resource])
-        Ticket.stubs(:create_from_redmine_resource).with(issue_resource)
+        Ticket.stubs(:create_from_redmine_resource).with(project, issue_resource)
         subject.run
       end
 
@@ -46,7 +46,7 @@ module RoundTrip
       end
 
       it 'creates tickets' do
-        expect(Ticket).to have_received(:create_from_redmine_resource).with(issue_resource)
+        expect(Ticket).to have_received(:create_from_redmine_resource).with(project, issue_resource)
       end
     end
   end

@@ -3,6 +3,8 @@ require 'model_spec_helper'
 module RoundTrip
   describe Ticket do
     context 'create_from_* methods' do
+      let(:project) { create(:project) }
+
       before do
         Ticket.stubs(:create!).with(anything)
       end
@@ -22,10 +24,10 @@ module RoundTrip
         let(:resource_attribs_with_trello_id) { resource_attribs.merge(:description => issue_description_with_trello_id) }
         let(:issue_resource) { stub('Redmine::Issue', resource_attribs) }
         let(:issue_resource_with_trello_id) { stub('Redmine::Issue', resource_attribs_with_trello_id) }
-        let(:ticket_attributes) { attributes_for(:redmine_ticket) }
+        let(:ticket_attributes) { attributes_for(:redmine_ticket).merge(project_id: project.id) }
 
         it 'creates tickets' do
-          Ticket.create_from_redmine_resource(issue_resource)
+          Ticket.create_from_redmine_resource(project, issue_resource)
 
           expect(Ticket).to have_received(:create!).with(ticket_attributes)
         end
@@ -36,7 +38,7 @@ module RoundTrip
             :redmine_trello_id => trello_card_id
           )
 
-          Ticket.create_from_redmine_resource(issue_resource_with_trello_id)
+          Ticket.create_from_redmine_resource(project, issue_resource_with_trello_id)
 
           expect(Ticket).to have_received(:create!).with(attributes_with_trello_id)
         end
@@ -45,7 +47,7 @@ module RoundTrip
       describe '.create_from_trello_card' do
         let(:card_attributes) { attributes_for(:trello_card) }
         let(:trello_card) { stub('Trello::Card', card_attributes) }
-        let(:ticket_attributes) { attributes_for(:ticket, :from_trello_card, card_attributes) }
+        let(:ticket_attributes) { attributes_for(:ticket, :from_trello_card, card_attributes).merge(project_id: project.id) }
         let(:redmine_issue_id) { 12345 }
         let(:card_description_with_redmine_id) { "## Redmine issue id: #{redmine_issue_id} ##\n#{card_attributes[:description]}" }
         let(:ticket_attributes_with_redmine_id) do
@@ -56,7 +58,7 @@ module RoundTrip
         end
 
         it 'creates tickets' do
-          Ticket.create_from_trello_card(trello_card)
+          Ticket.create_from_trello_card(project, trello_card)
 
           expect(Ticket).to have_received(:create!).with(ticket_attributes)
         end
@@ -64,7 +66,7 @@ module RoundTrip
         it 'extracts redmine ids' do
           trello_card = stub('Trello::Card', card_attributes.merge(:description => card_description_with_redmine_id))
 
-          Ticket.create_from_trello_card(trello_card)
+          Ticket.create_from_trello_card(project, trello_card)
 
           expect(Ticket).to have_received(:create!).with(ticket_attributes_with_redmine_id)
         end

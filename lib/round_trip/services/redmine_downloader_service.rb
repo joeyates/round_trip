@@ -18,7 +18,7 @@ module RoundTrip
       )
       issue_resources = Redmine::Issue.find(:all, :params => {:project_id => project_id})
       issue_resources.each do |r|
-        Ticket.create_from_redmine_resource(r)
+        Ticket.create_from_redmine_resource(project, r)
       end
       RoundTrip.logger.info "#{issue_resources.size} tickets imported from Redmine project #{project_id} at #{url}"
     end

@@ -20,7 +20,7 @@ module RoundTrip
       board = authorizer.client.find(:boards, board_id)
       cards = board.cards
       cards.each do |card|
-        Ticket.create_from_trello_card(card)
+        Ticket.create_from_trello_card(project, card)
       end
       RoundTrip.logger.info "#{cards.size} tickets imported from Trello board '#{board.name}'"
     end

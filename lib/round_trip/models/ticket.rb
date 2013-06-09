@@ -41,8 +41,9 @@ module RoundTrip
     scope :redmine_newer,         united.where(at[:redmine_updated_on].gt(at[:trello_last_activity_date]))
     scope :trello_newer,          united.where(at[:trello_last_activity_date].gt(at[:redmine_updated_on]))
 
-    def self.create_from_redmine_resource(resource)
+    def self.create_from_redmine_resource(project, resource)
       attributes = {
+        :project_id          => project.id,
         :redmine_id          => resource.id,
         :redmine_project_id  => resource.project.id,
         :redmine_updated_on  => resource.updated_on,
@@ -56,16 +57,17 @@ module RoundTrip
       create!(attributes)
     end
 
-    def self.create_from_trello_card(card)
+    def self.create_from_trello_card(project, card)
       attributes = {
-        :trello_id => card.id,
-        :trello_board_id => card.board_id,
-        :trello_list_id => card.list_id,
-        :trello_name => card.name,
-        :trello_description => card.description,
+        :project_id                => project.id,
+        :trello_id                 => card.id,
+        :trello_board_id           => card.board_id,
+        :trello_list_id            => card.list_id,
+        :trello_name               => card.name,
+        :trello_description        => card.description,
         :trello_last_activity_date => card.last_activity_date,
-        :trello_url => card.url,
-        :trello_closed => card.closed,
+        :trello_url                => card.url,
+        :trello_closed             => card.closed,
       }
       m = card.description.match(/^\#\# Redmine issue id: (\d+) \#\#$/)
       if m
