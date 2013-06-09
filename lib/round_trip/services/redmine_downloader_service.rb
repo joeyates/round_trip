@@ -12,10 +12,7 @@ module RoundTrip
 
     def run
       Ticket.where(:redmine_project_id => project_id).destroy_all
-      Redmine::Resource.setup(
-        url,
-        project.config[:redmine_key]
-      )
+      Redmine::Resource.setup(url, project.config[:redmine_key])
       issue_resources = Redmine::Issue.find(:all, :params => {:project_id => project_id})
       issue_resources.each do |r|
         Ticket.create_from_redmine_resource(project, r)
