@@ -6,6 +6,7 @@ require 'round_trip/services/matched_ticket_updater_service'
 require 'round_trip/services/redmine_issue_preparer_service'
 require 'round_trip/services/trello_card_preparer_service'
 require 'round_trip/services/redmine_issue_creator_service'
+require 'round_trip/services/trello_card_creator_service'
 
 module RoundTrip
   class ProjectSynchroniserService
@@ -23,6 +24,7 @@ module RoundTrip
       RedmineIssuePreparerService.new(project).run
       TrelloCardPreparerService.new(project).run
       RedmineIssueCreatorService.new(project).run
+      TrelloCardCreatorService.new(project).run
     end
   end
 end
