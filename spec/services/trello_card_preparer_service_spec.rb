@@ -38,7 +38,11 @@ module RoundTrip
         expect(for_project_scope).to have_received(:not_united)
       end
 
-      it 'selects tickets with redmine data'
+      it 'selects tickets with redmine data' do
+        subject.run
+
+        expect(not_united_relation).to have_received(:with_redmine)
+      end
 
       [
         [:redmine_subject, :trello_name, :redmine_subject_1],
