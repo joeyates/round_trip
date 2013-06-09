@@ -21,7 +21,7 @@ module RoundTrip
 
       before do
         for_project_scope.stubs(:not_united).returns(not_united_relation)
-        not_united_relation.stubs(:with_trello).returns([trello_ticket])
+        not_united_relation.stubs(:without_redmine).returns([trello_ticket])
         trello_ticket.stubs(:save!)
       end
 
@@ -42,7 +42,7 @@ module RoundTrip
       it 'selects tickets with trello data' do
         subject.run
 
-        expect(not_united_relation).to have_received(:with_trello)
+        expect(not_united_relation).to have_received(:without_redmine)
       end
 
       [

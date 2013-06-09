@@ -44,7 +44,7 @@ module RoundTrip
     end
 
     def load_matching_trello_ticket(redmine_ticket)
-      Ticket.not_united.with_trello.where(trello_name: redmine_ticket.redmine_subject).first or raise ActiveRecord::RecordNotFound
+      Ticket.not_united.without_redmine.where(trello_name: redmine_ticket.redmine_subject).first or raise ActiveRecord::RecordNotFound
     end
   end
 end
