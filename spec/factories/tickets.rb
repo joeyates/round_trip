@@ -18,8 +18,11 @@ FactoryGirl.define do
       redmine_updated_on DateTime.now
     end
 
-    trait :with_trello_data do
+    trait :with_trello_id do
       trello_id                    { generate(:trello_id) }
+    end
+
+    trait :with_trello_data do
       trello_board_id              { generate(:trello_board_id) }
       trello_list_id               { generate(:trello_list_id) }
       trello_name                  { generate(:trello_name) }
@@ -52,8 +55,9 @@ FactoryGirl.define do
     end
 
     factory :redmine_ticket, traits: [:with_redmine_data]
-    factory :trello_ticket, traits: [:with_trello_data]
-    factory :united_ticket, traits: [:with_redmine_data, :with_trello_data]
+    factory :trello_ticket, traits: [:with_trello_id, :with_trello_data]
+    factory :united_ticket, traits: [:with_redmine_data, :with_trello_id, :with_trello_data]
+    factory :unpushed_redmine_ticket, traits: [:with_trello_data, :with_redmine_data]
   end
 end
 

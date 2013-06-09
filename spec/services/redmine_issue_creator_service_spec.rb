@@ -1,0 +1,53 @@
+require 'model_spec_helper'
+
+module RoundTrip
+  describe RedmineIssueCreatorService do
+    it_behaves_like 'a class with constructor arity', 1
+
+    describe '#run' do
+      include_context 'ticket project scoping'
+      let(:without_redmine_relation) { stub('ActiveRecord::Relation') }
+      let(:ticket_attributes) { attributes_for(:unpushed_redmine_ticket) }
+      let(:unpushed_redmine_ticket) { create(:ticket, ticket_attributes) }
+      let(:issue_attributes) do
+        {
+          subject: ticket_attributes[:redmine_subject],
+          description: ticket_attributes[:redmine_description],
+        }
+      end
+      let(:issue) { stub('ActiveResource::Base', save: nil) }
+
+      before do
+        for_project_scope.stubs(:without_redmine).returns(without_redmine_relation)
+        without_redmine_relation.stubs(:all).returns([unpushed_redmine_ticket])
+        Redmine::Issue.stubs(:new).with(issue_attributes).returns(issue)
+      end
+
+      subject { RedmineIssueCreatorService.new(project) }
+
+      it 'sets up resource settings'
+
+      it 'searches among project tickets' do
+        subject.run
+
+        expect(Ticket).to have_received(:for_project).with(project.id)
+      end
+
+      it 'selects tickets without redmine ids' do
+        subject.run
+
+        expect(for_project_scope).to have_received(:without_redmine)
+      end
+
+      it 'pushes tickets to redmine' do
+        subject.run
+
+        expect(Redmine::Issue).to have_received(:new).with(issue_attributes)
+        expect(issue).to have_received(:save).with()
+      end
+
+      it 'includes the trello id in the description'
+    end
+  end
+end
+

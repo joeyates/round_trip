@@ -48,6 +48,8 @@ module RoundTrip
 
           expect(Ticket).to have_received(:create!).with(attributes_with_trello_id)
         end
+
+        it 'removes ids from the description'
       end
 
       describe '.create_from_trello_card' do
@@ -76,6 +78,8 @@ module RoundTrip
 
           expect(Ticket).to have_received(:create!).with(ticket_attributes_with_redmine_id)
         end
+
+        it 'removes ids from the description'
       end
     end
 

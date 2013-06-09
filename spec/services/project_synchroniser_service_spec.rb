@@ -22,8 +22,9 @@ module RoundTrip
       let(:redmine_downloader_service) { stub('RedmineDownloaderService', :run => nil) }
       let(:ticket_merger_service) { stub('TicketMergerService', :run => nil) }
       let(:matched_ticket_updater_service) { stub('MatchedTicketUpdaterService', :run => nil) }
-      let(:trello_card_preparer_service) { stub('TrelloCardPreparerService', :run => nil) }
       let(:redmine_issue_preparer_service) { stub('RedmineIssuePreparerService', :run => nil) }
+      let(:trello_card_preparer_service) { stub('TrelloCardPreparerService', :run => nil) }
+      let(:redmine_issue_creator_service) { stub('RedmineIssueCreatorService', run: nil) }
 
       subject { ProjectSynchroniserService.new(project) }
 
@@ -34,6 +35,7 @@ module RoundTrip
         MatchedTicketUpdaterService.stubs(:new).with(project).returns(matched_ticket_updater_service)
         RedmineIssuePreparerService.stubs(:new).with(project).returns(redmine_issue_preparer_service)
         TrelloCardPreparerService.stubs(:new).with(project).returns(trello_card_preparer_service)
+        RedmineIssueCreatorService.stubs(:new).with(project).returns(redmine_issue_creator_service)
         subject.run
       end
 
@@ -70,6 +72,8 @@ module RoundTrip
       it 'updates existing redmine issues'
 
       it 'create missing redmine issues' do
+        expect(RedmineIssueCreatorService).to have_received(:new).with(project)
+        expect(redmine_issue_creator_service).to have_received(:run)
       end
 
       it 'updates existing trello issues'
