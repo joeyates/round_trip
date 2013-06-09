@@ -118,27 +118,8 @@ module RoundTrip
       raise errors
     end
 
-    def self.copy_redmine_fields(from, to)
-      to.redmine_id          = from.redmine_id
-      to.redmine_project_id  = from.redmine_project_id
-      to.redmine_subject     = from.redmine_subject
-      to.redmine_description = from.redmine_description
-      to.redmine_updated_on  = from.redmine_updated_on
-    end
-
-    def self.copy_trello_fields(from, to)
-      to.trello_id  = from.trello_id
-      to.trello_board_id  = from.trello_board_id
-      to.trello_list_id  = from.trello_list_id
-      to.trello_name  = from.trello_name
-      to.trello_description  = from.trello_description
-      to.trello_last_activity_date  = from.trello_last_activity_date
-      to.trello_url  = from.trello_url
-      to.trello_closed  = from.trello_closed
-    end
-
     def merge_redmine(redmine_ticket)
-      self.class.copy_redmine_fields(redmine_ticket, self)
+      copy_redmine_fields(redmine_ticket)
 
       self.redmine_trello_id = self.trello_id
 
@@ -147,12 +128,33 @@ module RoundTrip
     end
 
     def merge_trello(trello_ticket)
-      self.class.copy_trello_fields(trello_ticket, self)
+      copy_trello_fields(trello_ticket)
 
       self.trello_redmine_id = self.redmine_id
 
       trello_ticket.destroy
       save!
+    end
+
+    private
+
+    def copy_redmine_fields(from)
+      self.redmine_id          = from.redmine_id
+      self.redmine_project_id  = from.redmine_project_id
+      self.redmine_subject     = from.redmine_subject
+      self.redmine_description = from.redmine_description
+      self.redmine_updated_on  = from.redmine_updated_on
+    end
+
+    def copy_trello_fields(from)
+      self.trello_id  = from.trello_id
+      self.trello_board_id  = from.trello_board_id
+      self.trello_list_id  = from.trello_list_id
+      self.trello_name  = from.trello_name
+      self.trello_description  = from.trello_description
+      self.trello_last_activity_date  = from.trello_last_activity_date
+      self.trello_url  = from.trello_url
+      self.trello_closed  = from.trello_closed
     end
   end
 end

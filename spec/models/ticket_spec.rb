@@ -141,12 +141,6 @@ module RoundTrip
       end
     end
 
-    describe '.copy_redmine_fields' do
-      it "doesn't modify the ticket to be copied from"
-      it 'copies the redmine fields'
-      it 'leaves other fields unchanged'
-    end
-
     context 'associations' do
       it { should belong_to(:project) }
     end
