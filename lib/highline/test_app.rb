@@ -44,6 +44,18 @@ class HighLine::TestApp
     @pages[page_index]
   end
 
+  # Feature creation/debug method
+  # Call this after calling '#run' to get a dump of all pages
+  def dump_pages
+    pages.each.with_index do |p, i|
+      puts "page #{i}"
+      puts '-' * 50
+      puts p
+      puts '-' * 50
+      puts
+    end
+  end
+
   private
 
   def push_current_page
