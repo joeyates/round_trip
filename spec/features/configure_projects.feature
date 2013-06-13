@@ -35,7 +35,7 @@ Feature: Configure projects
     And I type 'save'
     And I re-open the same project
     And I close the program
-    Then I should have seen 'trello key: trololololo' on page 6
+    Then I should have seen 'trello key: trololololo' on page 5
 
   Scenario: Edit a project - quit without saving
     Given I edit an existing project
@@ -43,5 +43,5 @@ Feature: Configure projects
     And I type 'q'
     And I re-open the same project
     And I close the program
-    Then I should have seen 'trello key: (unset)' on page 6
+    Then I should have seen 'trello key: (unset)' on page 5
 

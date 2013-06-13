@@ -22,7 +22,6 @@ module RoundTrip
             end
           end
           menu.choice('quit (q)') do
-            system('clear')
             return
           end
         end

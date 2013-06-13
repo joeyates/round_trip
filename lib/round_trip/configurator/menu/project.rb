@@ -28,11 +28,9 @@ module RoundTrip
           end
           menu.choice('save') do
             project.save!
-            system('clear')
             return
           end
           menu.choice('quit (q)') do
-            system('clear')
             return
           end
         end
