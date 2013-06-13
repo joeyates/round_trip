@@ -9,6 +9,7 @@ module RoundTrip
         system('clear')
         high_line.choose do |menu|
           menu.header = 'Choose a project'
+          menu.flow = :columns_down
           Project.all.each do |project|
             menu.choice(project.name) do
               Configurator::Menu::Project.new(high_line).run(Configurator::Presenter::Project.new(project))

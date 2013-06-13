@@ -9,6 +9,7 @@ module RoundTrip
         system('clear')
         high_line.choose do |menu|
           menu.header = project.to_s + "\n\nEdit a setting"
+          menu.flow = :columns_down
           menu.choice('name') do
             project.name = high_line.ask("name: ")
           end
