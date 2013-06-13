@@ -8,8 +8,10 @@ module RoundTrip
       loop do
         system('clear')
         high_line.choose do |menu|
-          menu.header = 'Choose a project'
-          menu.flow = :columns_down
+          menu.header    = 'Choose a project'
+          menu.flow      = :columns_down
+          menu.prompt    = 'What now> '
+          menu.select_by = :index_or_name
           Project.all.each do |project|
             menu.choice(project.name) do
               Configurator::Menu::Project.new(high_line).run(Configurator::Presenter::Project.new(project))

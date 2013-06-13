@@ -8,14 +8,20 @@ module RoundTrip
       loop do
         system('clear')
         high_line.choose do |menu|
-          menu.header = project.to_s + "\n\nEdit a setting"
-          menu.flow = :columns_down
+          menu.header    = project.to_s + "\n\nEdit a setting"
+          menu.flow      = :columns_down
+          menu.prompt    = 'What now> '
+          menu.select_by = :index_or_name
           menu.choice('name') do
-            project.name = high_line.ask("name: ")
+            project.name = high_line.ask("name: ") do |q|
+              q.default = project.name if project.name and project.name != ''
+            end
           end
           project.each_configuration do |key, human_name, value|
             menu.choice(human_name) do
-              project.config[key] = high_line.ask("#{human_name}: ")
+              project.config[key] = high_line.ask("#{human_name}: ") do |q|
+                q.default = project.config[key] if project.config[key]
+              end
             end
           end
           menu.choice('test redmine connection') do
