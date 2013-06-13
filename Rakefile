@@ -9,8 +9,11 @@ task :default => :spec
 
 RSpec::Core::RakeTask.new(:spec)
 
-RSpec::Core::RakeTask.new(:'spec:models') do |t|
-  t.pattern = 'spec/models/**/*_spec.rb'
+%w{lib models services}.each do |group|
+  desc "Run RSpec examples for #{group}"
+  RSpec::Core::RakeTask.new(:"spec:#{group}") do |t|
+    t.pattern = "spec/#{group}/**/*_spec.rb"
+  end
 end
 
 Cucumber::Rake::Task.new(:'spec:features') do |t|
