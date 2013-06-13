@@ -5,7 +5,10 @@ require 'cucumber'
 require 'cucumber/rake/task'
 import 'lib/tasks/database.rake'
 
-task :default => :spec
+task :default => :all
+
+desc 'Run all specs and features'
+task all: [:spec, :'spec:features']
 
 RSpec::Core::RakeTask.new(:spec)
 
