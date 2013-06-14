@@ -19,9 +19,11 @@ module RoundTrip
           end
           project.each_configuration do |key, human_name, value|
             menu.choice(human_name) do
-              project.config[key] = high_line.ask("#{human_name}: ") do |q|
-                q.default = project.config[key] if project.config[key]
+              c = project.config.clone
+              c[key] = high_line.ask("#{human_name}: ") do |q|
+                q.default = c[key] if c[key]
               end
+              project.config = c
             end
           end
           menu.choice('test redmine connection') do
