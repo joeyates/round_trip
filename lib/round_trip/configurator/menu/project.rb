@@ -19,9 +19,13 @@ module RoundTrip
       end
     end
 
+    private
+
     def show_menu
       high_line.choose do |menu|
-        menu.header    = project.to_s + "\n\nEdit a setting"
+        menu.header    = "RoundTrip - editing project\n" +
+                         project.to_s + "\n\n" +
+                         'Choose a setting'
         menu.flow      = :columns_down
         menu.prompt    = 'What now> '
         menu.select_by = :index_or_name

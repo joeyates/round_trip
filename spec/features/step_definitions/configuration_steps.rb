@@ -1,11 +1,14 @@
 # @app is a HighLine::TestApp.
 # Output is available at the end of the run.
 # Configurator page numbering is 1-based - we get an initial clear screen at the main menu.
+# Use
+#   @app.dump_pages
+# to debug.
 
 include HighLine::RSpecHelper
 
-Given 'I go to the projects menu' do
-  @app.type 'Manage projects'
+Given /^I go to the projects menu$/ do
+  @app.type 'manage projects'
 end
 
 Given /^I already have (\d+) projects?$/ do |count|

@@ -1,6 +1,5 @@
 require 'round_trip/configurator/menu/base'
-require 'round_trip/configurator/menu/project'
-require 'round_trip/configurator/presenter/project'
+require 'round_trip/configurator/menu/projects'
 
 module RoundTrip
   class Configurator::Menu::Main < Configurator::Menu::Base
@@ -18,17 +17,8 @@ module RoundTrip
         menu.flow      = :columns_down
         menu.prompt    = 'What now> '
         menu.select_by = :index_or_name
-        Project.all.each do |project|
-          menu.choice(project.name) do
-            project_presenter = Configurator::Presenter::Project.new(project)
-            Configurator::Menu::Project.new(high_line, project_presenter).run
-          end
-        end
-        menu.choice('add a project') do
-          name = high_line.ask('name: ')
-          if name.match(/^[\w\s\d]+$/)
-            Project.create!(:name => name)
-          end
+        menu.choice('manage projects') do
+          Configurator::Menu::Projects.new(high_line).run
         end
         menu.choice('quit (q)') do
           return true
