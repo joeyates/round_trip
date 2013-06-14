@@ -39,7 +39,12 @@ module RoundTrip
             return
           end
           menu.choice('quit (q)') do
-            return
+            if project.changed?
+              confirmed = high_line.agree("The project has been modified.\nExit without saving? ")
+              return if confirmed
+            else
+              return
+            end
           end
         end
       end

@@ -41,7 +41,15 @@ Feature: Configure projects
     Given I edit an existing project
     When I set trello key to 'trololololo'
     And I type 'q'
+    And I type 'y'
     And I re-open the same project
     And I close the program
     Then I should have seen 'trello key: (unset)' on page 5
+
+  Scenario: Edit a project - quit without saving
+    Given I edit an existing project
+    When I set trello key to 'trololololo'
+    And I type 'q'
+    And I close the program
+    Then I should have seen 'Exit without saving' on page 3
 

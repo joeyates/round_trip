@@ -6,7 +6,7 @@ module RoundTrip
   class Configurator::Presenter::Project
     attr_reader :project
 
-    delegate :name, :name=, :config, :save!, :to => :@project
+    delegate :name, :name=, :config, :config=, :changed?, :save!, :to => :@project
 
     def initialize(project)
       @project = project
