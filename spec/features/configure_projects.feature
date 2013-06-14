@@ -4,19 +4,27 @@ Feature: Configure projects
   As a RoundTrip administrator
   I want to configure RoundTrip projects
 
+  Scenario: Choose projects menu
+    Given I go to the projects menu
+    When I close the program
+    Then I should have seen 'Choose or add a project:' on page 2
+
   Scenario: List projects
     Given I already have 3 projects
+    And I go to the projects menu
     When I close the program
     Then I should have seen the list of projects on page 1
 
   Scenario: Add a project - with a name
-    Given I type 'add a project'
-    When I type 'foobar'
+    Given I go to the projects menu
+    When I type 'add a project'
+    And I type 'foobar'
     And I close the program
     Then I should have seen '1. foobar' on page 2
 
   Scenario Outline: Edit a project
-    Given I edit an existing project
+    Given I go to the projects menu
+    And I edit an existing project
     When I set <Key> to '<Value>'
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 3
@@ -30,7 +38,8 @@ Feature: Configure projects
     | redmine project id  | 12345                       |
 
   Scenario: Edit a project - save
-    Given I edit an existing project
+    Given I go to the projects menu
+    And I edit an existing project
     When I set trello key to 'trololololo'
     And I type 'save'
     And I re-open the same project
@@ -38,7 +47,8 @@ Feature: Configure projects
     Then I should have seen 'trello key: trololololo' on page 5
 
   Scenario: Edit a project - quit without saving
-    Given I edit an existing project
+    Given I go to the projects menu
+    And I edit an existing project
     When I set trello key to 'trololololo'
     And I type 'q'
     And I type 'y'
@@ -47,7 +57,8 @@ Feature: Configure projects
     Then I should have seen 'trello key: (unset)' on page 5
 
   Scenario: Edit a project - quit without saving
-    Given I edit an existing project
+    Given I go to the projects menu
+    And I edit an existing project
     When I set trello key to 'trololololo'
     And I type 'q'
     And I close the program

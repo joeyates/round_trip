@@ -4,6 +4,10 @@
 
 include HighLine::RSpecHelper
 
+Given 'I go to the projects menu' do
+  @app.type 'Manage projects'
+end
+
 Given /^I already have (\d+) projects?$/ do |count|
   @projects = create_list(:project, count.to_i)
 end
