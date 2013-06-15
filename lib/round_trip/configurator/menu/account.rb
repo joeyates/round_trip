@@ -1,4 +1,6 @@
 require 'round_trip/configurator/menu/base'
+require 'round_trip/redmine/connection_tester'
+require 'round_trip/trello/connection_tester'
 
 module RoundTrip
   class Configurator::Menu::Account < Configurator::Menu::Base

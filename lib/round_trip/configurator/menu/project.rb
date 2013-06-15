@@ -1,6 +1,5 @@
 require 'round_trip/configurator/menu/base'
-require 'round_trip/redmine/connection_tester'
-require 'round_trip/trello/connection_tester'
+require 'round_trip/configurator/menu/account_chooser'
 
 module RoundTrip
   class Configurator::Menu::Project < Configurator::Menu::Base
@@ -34,14 +33,23 @@ module RoundTrip
             q.default = project.name if project.name and project.name != ''
           end
         end
-        project.each_configuration do |key, human_name|
-          menu.choice(human_name) do
-            c = project.config.clone
-            c[key] = high_line.ask("#{human_name}: ") do |q|
-              q.default = c[key] if c[key]
-            end
-            project.config = c
+        menu.choice('redmine account') do
+          account = Configurator::Menu::AccountChooser.new(high_line, RedmineAccount.all).run
+          if not account.nil?
+            project.redmine_account = account
           end
+        end
+        if project.redmine_account
+          menu.choice('redmine project') do
+          end
+        end
+        menu.choice('trello account') do
+          account = Configurator::Menu::AccountChooser.new(high_line, TrelloAccount.all).run
+          if not account.nil?
+            project.trello_account = account
+          end
+        end
+        if project.trello_account
         end
         menu.choice('save') do
           project.save!

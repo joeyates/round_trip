@@ -40,6 +40,7 @@ Given /^I already have (\d+) projects?$/ do |count|
 end
 
 Given /^I edit an existing project$/ do
+  @app.type 'manage projects'
   @project = create(:project, :unconfigured)
   @app.type @project.name
 end

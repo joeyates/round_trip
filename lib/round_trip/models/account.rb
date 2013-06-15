@@ -12,6 +12,10 @@ module RoundTrip
     after_initialize :set_defaults
     before_create :set_defaults
 
+    def to_s
+      name
+    end
+
     private
 
     def set_defaults

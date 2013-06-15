@@ -22,9 +22,16 @@ Feature: Configure projects
     And I close the program
     Then I should have seen '1. foobar' on page 3
 
+  Scenario: Select a Redmine account
+    Given I edit an existing project
+    And I already have a Redmine account called 'Redmine Stuff'
+    When I type 'redmine account'
+    And I type 'Redmine Stuff'
+    And I close the program
+    Then I should have seen 'redmine account: Redmine Stuff' on page 4
+
   Scenario Outline: Edit a project
-    Given I go to the projects menu
-    And I edit an existing project
+    Given I edit an existing project
     When I set <Key> to '<Value>'
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 4
@@ -34,16 +41,14 @@ Feature: Configure projects
       | redmine project id | 12345     |
 
   Scenario: Edit a project - quit without saving
-    Given I go to the projects menu
-    And I edit an existing project
+    Given I edit an existing project
     When I set trello board id to 'trololololo'
     And I type 'q'
     And I close the program
     Then I should have seen 'Exit without saving' on page 4
 
   Scenario: Edit a project - save
-    Given I go to the projects menu
-    And I edit an existing project
+    Given I edit an existing project
     When I set trello board id to 'trololololo'
     And I type 'save'
     And I re-open the same project
@@ -51,8 +56,7 @@ Feature: Configure projects
     Then I should have seen 'trello board id: trololololo' on page 6
 
   Scenario: Edit a project - quit without saving
-    Given I go to the projects menu
-    And I edit an existing project
+    Given I edit an existing project
     When I set trello board id to 'trololololo'
     And I type 'q'
     And I type 'y'
