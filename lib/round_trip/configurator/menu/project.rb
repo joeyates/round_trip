@@ -34,7 +34,7 @@ module RoundTrip
             q.default = project.name if project.name and project.name != ''
           end
         end
-        project.each_configuration do |key, human_name, value|
+        project.each_configuration do |key, human_name|
           menu.choice(human_name) do
             c = project.config.clone
             c[key] = high_line.ask("#{human_name}: ") do |q|
@@ -42,14 +42,6 @@ module RoundTrip
             end
             project.config = c
           end
-        end
-        menu.choice('test redmine connection') do
-          result, message = Redmine::ConnectionTester.new(project).run
-          high_line.ask "#{message}\nPress a key... "
-        end
-        menu.choice('test trello connection') do
-          result, message = Trello::ConnectionTester.new(project).run
-          high_line.ask "#{message}\nPress a key... "
         end
         menu.choice('save') do
           project.save!

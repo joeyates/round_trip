@@ -15,6 +15,26 @@ Given /^I go to the projects menu$/ do
   @app.type 'manage projects'
 end
 
+Given /^I already have a Redmine account called '([^']+)'/ do |name|
+  @redmine_account = create(:redmine_account, name: name)
+end
+
+Given /^I already have a Trello account called '([^']+)'/ do |name|
+  @trello_account = create(:trello_account, name: name)
+end
+
+Given /^I edit an existing Redmine account$/ do
+  @app.type 'manage accounts'
+  @redmine_account = create(:redmine_account)
+  @app.type @redmine_account.name
+end
+
+Given /^I edit an existing Trello account$/ do
+  @app.type 'manage accounts'
+  @trello_account = create(:trello_account)
+  @app.type @trello_account.name
+end
+
 Given /^I already have (\d+) projects?$/ do |count|
   @projects = create_list(:project, count.to_i)
 end

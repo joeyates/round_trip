@@ -29,8 +29,9 @@ Feature: Configure projects
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 4
     Examples:
-    | trello board id     | ae87d4567                   |
-    | redmine project id  | 12345                       |
+      | Key                | Value     |
+      | trello board id    | ae87d4567 |
+      | redmine project id | 12345     |
 
   Scenario: Edit a project - quit without saving
     Given I go to the projects menu
