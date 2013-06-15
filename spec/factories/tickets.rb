@@ -1,6 +1,5 @@
 FactoryGirl.define do
   sequence(:trello_id)
-  sequence(:trello_board_id)
   sequence(:trello_list_id)
   sequence(:trello_name)               { |n| "Name #{n}" }
   sequence(:trello_description)        { |n| "Description #{n}" }
@@ -12,7 +11,6 @@ FactoryGirl.define do
 
     trait :with_redmine_data do
       sequence(:redmine_id) { |id| id }
-      sequence(:redmine_project_id) { |id| id }
       sequence(:redmine_subject) { |n| "Subject #{n}" }
       sequence(:redmine_description) { |n| "Description #{n}" }
       redmine_updated_on DateTime.now
