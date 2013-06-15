@@ -29,18 +29,13 @@ Feature: Configure projects
     And I close the program
     Then I should have seen '<Key>: <Value>' on page 4
     Examples:
-    | Key                 | Value                       |
-    | name                | new_name                    |
-    | trello key          | 123stella                   |
-    | trello token        | secret                      |
     | trello board id     | ae87d4567                   |
-    | redmine url         | https://example.com/redmine |
     | redmine project id  | 12345                       |
 
   Scenario: Edit a project - quit without saving
     Given I go to the projects menu
     And I edit an existing project
-    When I set trello key to 'trololololo'
+    When I set trello board id to 'trololololo'
     And I type 'q'
     And I close the program
     Then I should have seen 'Exit without saving' on page 4
@@ -48,19 +43,19 @@ Feature: Configure projects
   Scenario: Edit a project - save
     Given I go to the projects menu
     And I edit an existing project
-    When I set trello key to 'trololololo'
+    When I set trello board id to 'trololololo'
     And I type 'save'
     And I re-open the same project
     And I close the program
-    Then I should have seen 'trello key: trololololo' on page 6
+    Then I should have seen 'trello board id: trololololo' on page 6
 
   Scenario: Edit a project - quit without saving
     Given I go to the projects menu
     And I edit an existing project
-    When I set trello key to 'trololololo'
+    When I set trello board id to 'trololololo'
     And I type 'q'
     And I type 'y'
     And I re-open the same project
     And I close the program
-    Then I should have seen 'trello key: (unset)' on page 6
+    Then I should have seen 'trello board id: (unset)' on page 6
 

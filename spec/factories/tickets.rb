@@ -10,9 +10,10 @@ FactoryGirl.define do
     association :project
 
     trait :with_redmine_data do
-      sequence(:redmine_id) { |id| id }
-      sequence(:redmine_subject) { |n| "Subject #{n}" }
-      sequence(:redmine_description) { |n| "Description #{n}" }
+      sequence(:redmine_id)
+      redmine_project_id              { generate(:redmine_project_id) }
+      sequence(:redmine_subject)      { |n| "Subject #{n}" }
+      sequence(:redmine_description)  { |n| "Description #{n}" }
       redmine_updated_on DateTime.now
     end
 

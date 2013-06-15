@@ -11,6 +11,10 @@ FactoryGirl.define do
         :trello_board_id => generate(:trello_board_id),
       }
     end
+
+    trait(:unconfigured) do
+      config { {} }
+    end
   end
 end
 

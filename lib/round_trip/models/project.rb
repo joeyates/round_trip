@@ -19,12 +19,27 @@ module RoundTrip
   class Project < ActiveRecord::Base
     include ActiveRecord::Validations
 
+    CONFIGURATION = [
+      :redmine_project_id, :trello_board_id,
+    ]
+
     validates_presence_of :name
     validates_uniqueness_of :name
     validates_with ProjectValidator
 
     belongs_to :redmine_account, class_name: 'Account', foreign_key: 'redmine_account_id'
     belongs_to :trello_account, class_name: 'Account', foreign_key: 'trello_account_id'
+
+    serialize :config
+
+    after_initialize :set_defaults
+    before_create :set_defaults
+
+    private
+
+    def set_defaults
+      self.config ||= {}
+    end
   end
 end
 
