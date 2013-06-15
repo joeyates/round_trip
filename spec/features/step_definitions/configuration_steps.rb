@@ -7,6 +7,10 @@
 
 include HighLine::RSpecHelper
 
+Given /^I go to the accounts menu$/ do
+  @app.type 'manage accounts'
+end
+
 Given /^I go to the projects menu$/ do
   @app.type 'manage projects'
 end

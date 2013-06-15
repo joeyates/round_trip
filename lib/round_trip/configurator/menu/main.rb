@@ -1,4 +1,5 @@
 require 'round_trip/configurator/menu/base'
+require 'round_trip/configurator/menu/accounts'
 require 'round_trip/configurator/menu/projects'
 
 module RoundTrip
@@ -17,6 +18,9 @@ module RoundTrip
         menu.flow      = :columns_down
         menu.prompt    = 'What now> '
         menu.select_by = :index_or_name
+        menu.choice('manage accounts') do
+          Configurator::Menu::Accounts.new(high_line).run
+        end
         menu.choice('manage projects') do
           Configurator::Menu::Projects.new(high_line).run
         end
