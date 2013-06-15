@@ -5,6 +5,7 @@ module RoundTrip
     include ActiveRecord::Validations
 
     validates_presence_of :name
+    validates_inclusion_of :type, in: ['RoundTrip::RedmineAccount', 'RoundTrip::TrelloAccount']
 
     serialize :config
 
