@@ -1,3 +1,5 @@
+require 'round_trip/redmine/resource'
+
 module RoundTrip
   module Redmine; end
 
@@ -9,11 +11,11 @@ module RoundTrip
     end
 
     def run
-      Redmine::Resource.setup(
+      RoundTrip::Redmine::Resource.setup(
         project.config[:redmine_url],
         project.config[:redmine_key]
       )
-      Redmine::Project.find(project.config[:redmine_project_id])
+      RoundTrip::Redmine::Project.find(project.config[:redmine_project_id])
       [true, "It works"]
     rescue Exception => e
       [false, "Error: #{e.message}"]
