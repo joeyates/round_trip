@@ -65,3 +65,10 @@ Feature: Configure accounts
     And I close the program
     Then I should have seen 'It works' on page 3
 
+  @trello
+  Scenario: Test a Trello connection
+    Given I edit an existing Trello account
+    When I type 'test Trello connection'
+    And I close the program
+    Then I should have seen 'It works' on page 3
+
