@@ -21,7 +21,15 @@ module RoundTrip
     end
   end
 
-  class Redmine::Project < Redmine::Resource; end
+  class Redmine::Project < Redmine::Resource
+    class << self
+      def instantiate_collection(collection, prefix_options = {})
+        issues = collection['projects']
+        issues.collect! { |record| instantiate_record(record, prefix_options) }
+      end
+    end
+  end
+
   class Redmine::Issue < Redmine::Resource
     class << self
       def instantiate_collection(collection, prefix_options = {})
