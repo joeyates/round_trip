@@ -14,6 +14,7 @@ module RoundTrip
       ]
       pairs << ['redmine project', config[:redmine_project_id]] if redmine_account
       pairs << ['trello board', config[:trello_board_id]] if trello_account
+      pairs
     end
   end
 end
