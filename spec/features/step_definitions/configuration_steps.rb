@@ -39,23 +39,39 @@ Given /^I already have (\d+) projects?$/ do |count|
   @projects = create_list(:project, count.to_i)
 end
 
-Given /^I edit an existing project$/ do
-  @app.type 'manage projects'
+Given 'I have a project' do
   @project = create(:project, :unconfigured)
+end
+
+Given 'I have a project with accounts set' do
+  step 'I have a project'
+  @redmine_account = create(:redmine_account)
+  @trello_account = create(:trello_account)
+  @project.redmine_account =  @redmine_account
+  @project.trello_account = @trello_account
+  @project.save!
+end
+
+Given 'I edit the project' do
+  @app.type 'manage projects'
   @app.type @project.name
 end
 
+Given /^I edit an existing project$/ do
+  step 'I have a project'
+  step 'I edit the project'
+end
+
 Given /^I edit a project with accounts set$/ do
-  @redmine_account = create(:redmine_account)
-  @trello_account = create(:trello_account)
-  @project = create(
-    :project,
-    :unconfigured,
-    redmine_account: @redmine_account,
-    trello_account: @trello_account
-  )
-  @app.type 'manage projects'
-  @app.type @project.name
+  step 'I have a project with accounts set'
+  step 'I edit the project'
+end
+
+Given /^I edit a project with a Trello board set$/ do
+  step 'I have a project with accounts set'
+  @project.config = @project.config.merge(trello_board_id: 'abc12345')
+  @project.save!
+  step 'I edit the project'
 end
 
 Given /^I re-open the same project$/ do

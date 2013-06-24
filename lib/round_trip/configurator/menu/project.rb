@@ -59,6 +59,11 @@ module RoundTrip
             set_config(:trello_board_id, trello_board_id) unless trello_board_id.nil?
           end
         end
+        if project.config[:trello_board_id]
+          menu.choice('trello list matchers') do
+            ideas_list, backlog_list, current_list, done_list = Configurator::Menu::TrelloListMatcherInput.new(high_line, project).run
+          end
+        end
         menu.choice('save') do
           project.save!
           return true

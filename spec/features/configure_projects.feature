@@ -63,3 +63,9 @@ Feature: Configure projects
     And I close the program
     Then I should have seen text matching '1. Project \d+' on page 5
 
+  Scenario: Set Trello list regexes
+    Given I edit a project with a Trello board set
+    When I type 'trello list matchers'
+    And I close the program
+    Then I should have seen 'Edit Trello list matchers' on page 5
+
