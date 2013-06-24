@@ -69,7 +69,7 @@ Run the configuration program as follows:
 $ round_trip configure
 ```
 
-## Sites
+## Accounts
 
 ### Redmine
 
@@ -115,5 +115,11 @@ Testing
 
 ```shell
 rake db:migrate ROUND_TRIP_ENVIRONMENT=test
+```
+
+## All tests
+
+```
+rake
 ```
 
