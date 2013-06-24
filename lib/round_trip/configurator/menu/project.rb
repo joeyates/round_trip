@@ -2,6 +2,8 @@ require 'round_trip/configurator/menu/base'
 require 'round_trip/configurator/menu/account_chooser'
 require 'round_trip/configurator/menu/redmine_project_chooser'
 require 'round_trip/configurator/menu/trello_board_chooser'
+require 'round_trip/configurator/menu/trello_list_matcher_input'
+require 'round_trip/trello/list_matcher'
 
 module RoundTrip
   class Configurator::Menu::Project < Configurator::Menu::Base
@@ -61,7 +63,9 @@ module RoundTrip
         end
         if project.config[:trello_board_id]
           menu.choice('trello list matchers') do
-            ideas_list, backlog_list, current_list, done_list = Configurator::Menu::TrelloListMatcherInput.new(high_line, project).run
+            list_matcher = Trello::ListMatcher.new
+            ideas_list, backlog_list, current_list, done_list =
+              Configurator::Menu::TrelloListMatcherInput.new(high_line, project, list_matcher).run
           end
         end
         menu.choice('save') do

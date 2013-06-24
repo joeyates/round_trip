@@ -67,5 +67,5 @@ Feature: Configure projects
     Given I edit a project with a Trello board set
     When I type 'trello list matchers'
     And I close the program
-    Then I should have seen 'Edit Trello list matchers' on page 5
+    Then I should have seen 'configure list matchers' on page 4
 
