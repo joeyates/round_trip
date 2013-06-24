@@ -23,44 +23,43 @@ Feature: Configure projects
     Then I should have seen '1. foobar' on page 3
 
   Scenario: Select a Redmine account
-    Given I edit an existing project
-    And I already have a Redmine account called 'Redmine Stuff'
+    Given I already have a Redmine account called 'Redmine Stuff'
+    And I edit an existing project
     When I type 'redmine account'
     And I type 'Redmine Stuff'
     And I close the program
-    Then I should have seen 'redmine account: Redmine Stuff' on page 4
+    Then I should have seen 'redmine account: Redmine Stuff' on page 5
 
+  @trello @redmine
   Scenario Outline: Edit a project
-    Given I edit an existing project
-    When I set <Key> to '<Value>'
+    Given I edit a project with accounts set
+    When I set <Key> to '<Choice>'
     And I close the program
-    Then I should have seen '<Key>: <Value>' on page 4
+    Then I should have seen '<Key>: <Result>' on page 5
     Examples:
-      | Key                | Value     |
-      | trello board id    | ae87d4567 |
-      | redmine project id | 12345     |
+      | Key             | Choice     | Result   |
+      | trello board    | My board   | abc12345 |
+      | redmine project | My project | 12345    |
 
   Scenario: Edit a project - quit without saving
     Given I edit an existing project
-    When I set trello board id to 'trololololo'
+    When I set name to 'Trololololo'
     And I type 'q'
     And I close the program
     Then I should have seen 'Exit without saving' on page 4
 
   Scenario: Edit a project - save
     Given I edit an existing project
-    When I set trello board id to 'trololololo'
+    When I set name to 'Trololololo'
     And I type 'save'
-    And I re-open the same project
     And I close the program
-    Then I should have seen 'trello board id: trololololo' on page 6
+    Then I should have seen '1. Trololololo' on page 5
 
   Scenario: Edit a project - quit without saving
     Given I edit an existing project
-    When I set trello board id to 'trololololo'
+    When I set name to 'Trololololo'
     And I type 'q'
     And I type 'y'
-    And I re-open the same project
     And I close the program
-    Then I should have seen 'trello board id: (unset)' on page 6
+    Then I should have seen text matching '1. Project \d+' on page 5
 

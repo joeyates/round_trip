@@ -45,6 +45,19 @@ Given /^I edit an existing project$/ do
   @app.type @project.name
 end
 
+Given /^I edit a project with accounts set$/ do
+  @redmine_account = create(:redmine_account)
+  @trello_account = create(:trello_account)
+  @project = create(
+    :project,
+    :unconfigured,
+    redmine_account: @redmine_account,
+    trello_account: @trello_account
+  )
+  @app.type 'manage projects'
+  @app.type @project.name
+end
+
 Given /^I re-open the same project$/ do
   @app.type @project.name
 end
@@ -82,5 +95,11 @@ Then /^I should have seen '([^']+)' on page (\d+)$/ do |text, page_number|
   expect_page_to_exist(page_number)
   page = @app.get_page(page_number)
   expect(page).to include(text)
+end
+
+Then /^I should have seen text matching '([^']+)' on page (\d+)$/ do |regexp, page_number|
+  expect_page_to_exist(page_number)
+  page = @app.get_page(page_number)
+  expect(page).to match(Regexp.new(regexp))
 end
 

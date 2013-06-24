@@ -13,7 +13,7 @@ module RoundTrip
     end
 
     def to_s
-      display_pairs.each do |human_name, v|
+      display_pairs.map do |human_name, v|
         value =
           if not v.nil? and v != ''
             v

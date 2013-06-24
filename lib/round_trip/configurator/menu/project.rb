@@ -1,5 +1,7 @@
 require 'round_trip/configurator/menu/base'
 require 'round_trip/configurator/menu/account_chooser'
+require 'round_trip/configurator/menu/redmine_project_chooser'
+require 'round_trip/configurator/menu/trello_board_chooser'
 
 module RoundTrip
   class Configurator::Menu::Project < Configurator::Menu::Base
@@ -41,6 +43,8 @@ module RoundTrip
         end
         if project.redmine_account
           menu.choice('redmine project') do
+           redmine_project_id = Configurator::Menu::RedmineProjectChooser.new(high_line, project.redmine_account).run
+           set_config(:redmine_project_id, redmine_project_id) unless redmine_project_id.nil?
           end
         end
         menu.choice('trello account') do
@@ -50,6 +54,10 @@ module RoundTrip
           end
         end
         if project.trello_account
+          menu.choice('trello board') do
+            trello_board_id = Configurator::Menu::TrelloBoardChooser.new(high_line, project.trello_account).run
+            set_config(:trello_board_id, trello_board_id) unless trello_board_id.nil?
+          end
         end
         menu.choice('save') do
           project.save!
@@ -65,6 +73,12 @@ module RoundTrip
         end
       end
       false
+    end
+
+    def set_config(key, value)
+      c = project.config.clone
+      c[key] = value
+      project.config = c
     end
   end
 end
