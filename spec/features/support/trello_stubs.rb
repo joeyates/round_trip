@@ -1,6 +1,6 @@
 require 'round_trip/trello/authorizer'
 
-Before('@trello') do
+module TrelloStubs
   extend RSpec::Mocks::ArgumentMatchers
 
   @trello_authorizer = stub('Authorizer')

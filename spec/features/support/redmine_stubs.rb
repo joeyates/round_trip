@@ -1,6 +1,6 @@
 require 'round_trip/redmine/resource'
 
-Before('@redmine') do
+module RedmineStubs
   extend RSpec::Mocks::ArgumentMatchers
 
   RoundTrip::Redmine::Resource.

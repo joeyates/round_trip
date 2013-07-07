@@ -6,4 +6,5 @@ database_config = {
 }
 
 ActiveRecord::Base.establish_connection(database_config)
+ActiveRecord::Base.logger = Logger.new('test.log')
 

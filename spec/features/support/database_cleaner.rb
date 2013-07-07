@@ -1,7 +1,7 @@
 require 'database_cleaner'
 
 AfterConfiguration do |config|
-  DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.strategy = :truncation
   DatabaseCleaner.clean_with :truncation
 end
 
