@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files bin`.split("\n").map { |p| p[4..-1] }
   s.require_paths = ['lib']
 
-  s.add_dependency 'activerecord', '>= 3.2.0'
-  s.add_dependency 'activeresource', '>= 3.2.0'
+  s.add_dependency 'activerecord',   '>= 4.0.0'
+  s.add_dependency 'activeresource', '>= 4.0.0'
   s.add_dependency 'highline'
   s.add_dependency 'rake'
   s.add_dependency 'ruby-trello'
