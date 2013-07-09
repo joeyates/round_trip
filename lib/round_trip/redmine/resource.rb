@@ -17,8 +17,19 @@ module RoundTrip
       nil
     end
 
-    def self.headers
-      ActiveResource::Base.headers
+    # Unroll pagination
+    def self.all(params = {})
+      ps = self.find(:all, params: params)
+      total_count = ps.total_count
+      limit = ps.limit
+      ps = ps.to_a
+      if ps.size < total_count
+        start = limit
+        (start .. total_count).step(25) do |offset|
+          ps += self.find(:all, params: params.merge({offset: offset, limit: 25})).to_a
+        end
+      end
+      ps
     end
   end
 
