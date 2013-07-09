@@ -22,22 +22,38 @@ module RoundTrip
     end
   end
 
-  class Redmine::Project < Redmine::Resource
-    class << self
-      def instantiate_collection(collection, prefix_options = {})
-        issues = collection['projects']
-        issues.collect! { |record| instantiate_record(record, prefix_options) }
-      end
+  class Redmine::Collection < ActiveResource::Collection
+    attr_reader :limit
+    attr_reader :offset
+    attr_reader :total_count
+
+    def self.collection_name(name)
+      @collection_name = name
+    end
+
+    def initialize(parsed = {})
+      collection_name = self.class.instance_variable_get('@collection_name')
+      @elements    = parsed[collection_name]
+      @total_count = parsed['total_count']
+      @limit       = parsed['limit']
+      @offset      = parsed['offset']
     end
   end
 
+  class Redmine::ProjectCollection < Redmine::Collection
+    collection_name 'projects'
+  end
+
+  class Redmine::Project < Redmine::Resource
+    self.collection_parser = Redmine::ProjectCollection
+  end
+
+  class Redmine::IssueCollection < Redmine::Collection
+    collection_name 'issues'
+  end
+
   class Redmine::Issue < Redmine::Resource
-    class << self
-      def instantiate_collection(collection, prefix_options = {})
-        issues = collection['issues']
-        issues.collect! { |record| instantiate_record(record, prefix_options) }
-      end
-    end
+    self.collection_parser = Redmine::IssueCollection
   end
 end
 
