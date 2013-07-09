@@ -1,5 +1,6 @@
 *.sqlite3
 /.bundle
+/config/end_to_end.yml
 /coverage
 /Gemfile.lock
 /pkg
