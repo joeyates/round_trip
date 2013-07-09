@@ -56,13 +56,11 @@ Feature: Configure accounts
       | trello secret | secret123 |
       | trello token  | token123  |
 
-  @redmine
   Scenario: Test a Redmine connection
     Given I edit an existing Redmine account
     When I type 'test Redmine connection'
     Then I should see 'It works'
 
-  @trello
   Scenario: Test a Trello connection
     Given I edit an existing Trello account
     When I type 'test Trello connection'

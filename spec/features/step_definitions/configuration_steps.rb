@@ -38,7 +38,7 @@ Given 'I have a project with accounts set' do
   step 'I have a project'
   @redmine_account = create(:redmine_account)
   @trello_account = create(:trello_account)
-  @project.redmine_account =  @redmine_account
+  @project.redmine_account = @redmine_account
   @project.trello_account = @trello_account
   @project.save!
 end
@@ -59,8 +59,10 @@ Given /^I edit a project with accounts set$/ do
 end
 
 Given /^I edit a project with a Trello board set$/ do
+  extend TrelloStubs
+  stub_trello
   step 'I have a project with accounts set'
-  @project.config = @project.config.merge(trello_board_id: 'abc12345')
+  @project.config = @project.config.merge(trello_board_id: @board.id)
   @project.save!
   step 'I edit the project'
 end
@@ -80,6 +82,10 @@ end
 When /^I set ([\w\s]+) to '([^']+)'$/ do |key, value|
   @client.type key.strip
   @client.type value.strip
+end
+
+When /^I wait for ([^\s]+) seconds?$/ do |seconds|
+  sleep seconds.to_f
 end
 
 Then /^I should see the list of projects/ do

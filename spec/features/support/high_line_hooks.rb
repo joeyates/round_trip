@@ -6,11 +6,12 @@ Before('@highline') do
   @client.run do |driver|
     # stop the configurator clearing the screen
     RoundTrip::Configurator::Menu::Base.any_instance.stub(:system).with('clear') do
-      driver.inject("---- Page separator ---")
+      driver.inject("\n---- Page separator ---\n")
     end
 
     include RedmineStubs
-    include TrelloStubs
+    extend TrelloStubs
+    stub_trello
 
     configurator = RoundTrip::Configurator.new(driver.high_line)
     configurator.run

@@ -26,7 +26,6 @@ Feature: Configure projects
     And I type 'Redmine Stuff'
     Then I should see 'redmine account: Redmine Stuff'
 
-  @trello @redmine
   Scenario Outline: Edit a project
     Given I edit a project with accounts set
     When I set <Key> to '<Choice>'
