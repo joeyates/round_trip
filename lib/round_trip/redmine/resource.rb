@@ -14,6 +14,7 @@ module RoundTrip
       # and site URL via this method
       self.site = url
       self.headers['X-Redmine-API-Key'] = key
+      nil
     end
 
     def self.headers
