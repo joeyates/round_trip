@@ -4,25 +4,28 @@ module RoundTrip
   class Configurator::Menu::TrelloListMatcherInput < Configurator::Menu::Base
     attr_reader :project
     attr_reader :list_matcher
-    attr_reader :ideas
-    attr_reader :backlog
-    attr_reader :current
-    attr_reader :done
+    attr_reader :matchers
+    attr_reader :dirty
 
     def initialize(high_line, project, list_matcher)
       super(high_line)
       @project = project
       @list_matcher = list_matcher
-      ideas    = project.config[:ideas]   or 'ideas'
-      backlog  = project.config[:backlog] or 'backlog'
-      current  = project.config[:current] or 'sprint \d+'
-      done     = project.config[:done]    or 'done \d+'
+      @matchers = {
+        ideas:    project.config[:ideas]   || 'ideas',
+        backlog:  project.config[:backlog] || 'backlog',
+        current:  project.config[:current] || 'sprint \d+',
+        done:     project.config[:done]    || 'done \d+',
+      }
+      @dirty = false
     end
 
     def run
-      system('clear')
-      show_menu
-      [ideas, backlog, current, done]
+      loop do
+        system('clear')
+        done = show_menu
+        return if done
+      end
     end
 
     private
@@ -30,24 +33,39 @@ module RoundTrip
     def show_menu
       high_line.choose do |menu|
         setup_list_matcher
-        menu.header    = "RoundTrip - configure list matchers\n" +
+        menu.header    = "RoundTrip - configure lists\n" +
                          list_matcher.to_s
         menu.flow      = :columns_down
         menu.prompt    = 'Choose one> '
         menu.select_by = :index_or_name
+        [:ideas, :backlog, :current, :done].each do |area|
+          menu.choice(area.to_s) do
+            result = high_line.ask('matcher: ') do |q|
+              q.default = matchers[area]
+            end
+            @dirty = true
+            matchers[area] = result
+          end
+        end
+        menu.choice('save') do
+          project.config = project.config.merge(matchers)
+          project.save!
+          return true
+        end
         menu.choice('quit (q)') do
-          return nil
+          if dirty
+            confirmed = high_line.agree("The matchers have been modified.\nExit without saving? ")
+            return confirmed
+          else
+            return true
+          end
         end
       end
+      false
     end
 
     def setup_list_matcher
-      list_matcher.setup(
-        ideas: ideas,
-        backlog: backlog,
-        current: current,
-        done: done
-      )
+      list_matcher.set_matchers(matchers)
     end
   end
 end

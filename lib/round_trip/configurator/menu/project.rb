@@ -63,7 +63,7 @@ module RoundTrip
         end
         if project.config[:trello_board_id]
           menu.choice('trello list matchers') do
-            list_matcher = Trello::ListMatcher.new
+            list_matcher = Trello::ListMatcher.new(project)
             ideas_list, backlog_list, current_list, done_list =
               Configurator::Menu::TrelloListMatcherInput.new(high_line, project, list_matcher).run
           end

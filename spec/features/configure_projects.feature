@@ -54,8 +54,33 @@ Feature: Configure projects
     And I type 'y'
     Then I should see text matching '1. Project \d+'
 
-  Scenario: Set Trello list regexes
+  Scenario: View Trello lists
     Given I edit a project with a Trello board set
     When I type 'trello list matchers'
-    Then I should see 'configure list matchers'
+    Then I should see 'configure lists'
+
+  Scenario Outline: Edit Trello list matchers
+    Given I edit Trello list matchers
+    When I type '<Area>'
+    And I type '<Matcher>'
+    Then I should see text matching '<Area>\s+| <Matcher>\s'
+    Examples:
+      | Area    | Matcher |
+      | ideas   | foo     |
+      | backlog | bar aaa |
+      | done    | baz     |
+
+  Scenario: Save Trello list matchers
+    Given I edit Trello list matchers
+    When I type 'ideas'
+    And I type 'foo'
+    And I type 'save'
+    Then I should see text matching '1. Project \d+'
+
+  Scenario: Edit Trello list matchers - quit without saving
+    Given I edit Trello list matchers
+    When I type 'ideas'
+    And I type 'foo'
+    And I type 'quit'
+    Then I should see 'Exit without saving'
 

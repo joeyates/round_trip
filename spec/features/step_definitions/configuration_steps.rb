@@ -58,13 +58,18 @@ Given /^I edit a project with accounts set$/ do
   step 'I edit the project'
 end
 
-Given /^I edit a project with a Trello board set$/ do
+Given 'I edit a project with a Trello board set' do
   extend TrelloStubs
   stub_trello
   step 'I have a project with accounts set'
   @project.config = @project.config.merge(trello_board_id: @board.id)
   @project.save!
   step 'I edit the project'
+end
+
+Given /^I edit Trello list matchers$/ do
+  step 'I edit a project with a Trello board set'
+  @client.type 'trello list matchers'
 end
 
 Given /^I re-open the same project$/ do

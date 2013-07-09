@@ -7,6 +7,14 @@ module RoundTrip
     attr_reader :key, :secret, :token
     attr_reader :client
 
+    def self.for_account(trello_account)
+      Trello::Authorizer.new(
+        trello_account.config[:trello_key],
+        trello_account.config[:trello_secret],
+        trello_account.config[:trello_token],
+      )
+    end
+
     def initialize(key, secret, token)
       @key, @secret, @token = key, secret, token
     end
