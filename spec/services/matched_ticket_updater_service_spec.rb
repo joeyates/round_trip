@@ -84,6 +84,41 @@ module RoundTrip
             expect(recent_redmine.send(from)).to eq(value)
           end
         end
+
+        context 'ticket is in' do
+          context 'ideas' do
+            it "sets the tracker to 'Idea'"
+            it 'sets the status to new'
+            it 'unsets the version'
+          end
+
+          context 'backlog' do
+            it "sets the tracker to 'Feature' if it is set to 'Idea'"
+            it 'sets the status to new'
+            it 'unsets the version'
+          end
+
+          context 'current' do
+            it "sets the tracker to 'Feature' if it is set to 'Idea'"
+            it 'sets the status to new'
+            it "sets the version to 'Sprint nn'"
+          end
+
+          context 'unmatched list' do
+            it "sets the tracker to 'Feature' if it is set to 'Idea'"
+            it "sets the status to 'in progress'"
+            it "sets the version to 'Sprint nn'"
+          end
+
+          context 'done' do
+            it "sets the status to 'feedback'"
+            it "sets the version to 'Sprint nn'"
+          end
+
+          context 'archived' do
+            it "sets the status to 'closed'"
+          end
+        end
       end
 
       context 'where trello is more recent' do
@@ -119,6 +154,40 @@ module RoundTrip
 
           expect(recent_redmine).to have_received(:save!)
           expect(recent_trello).to have_received(:save!)
+        end
+
+        context 'issue is' do
+          context "in 'ideas' tracker" do
+            it "sets the list to 'ideas'"
+          end
+
+          context 'new issue, no version' do
+            it "sets the list to 'backlog'"
+          end
+
+          context 'new issue, current version' do
+            it "sets the list to 'current'"
+          end
+
+          context 'in progress, current version' do
+            context 'unmatched lists exist' do
+              it "sets puts the card in the first unmatched, non-archived list"
+            end
+
+            context 'no unmatched lists exist' do
+              it "creates a list called 'In progress'"
+              it 'puts the card in the new list'
+            end
+          end
+
+          context 'feedback, current version' do
+            it "puts the card in the 'done' list"
+          end
+
+          context 'closed' do
+            it "creates an archived list for the current sprint"
+            it 'puts the card in the archived list'
+          end
         end
       end
     end
