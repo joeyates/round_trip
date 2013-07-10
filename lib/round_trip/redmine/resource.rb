@@ -24,8 +24,7 @@ module RoundTrip
       limit = ps.limit
       ps = ps.to_a
       if ps.size < total_count
-        start = limit
-        (start .. total_count).step(limit) do |offset|
+        (limit .. total_count).step(limit) do |offset|
           ps += self.find(:all, params: params.merge({offset: offset, limit: limit})).to_a
         end
       end
