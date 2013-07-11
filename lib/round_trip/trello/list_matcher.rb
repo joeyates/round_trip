@@ -59,17 +59,17 @@ module RoundTrip
 
       @list_map = Trello::ListMap.new(lists)
 
-      AREAS.each do |area|
-        if area != :archived
-          rx = Regexp.new(matchers[area], Regexp::IGNORECASE)
-          lists.each do |list|
-            next if list.closed
+      lists.each do |list|
+        if not list.closed
+          AREAS.each do |area|
+            next if area == :archived
+            rx = Regexp.new(matchers[area], Regexp::IGNORECASE)
             if list.name.match(rx)
               @list_map.add_mapping area, list
             end
           end
         else
-          # TODO
+          @list_map.add_mapping :archived, list
         end
       end
 
