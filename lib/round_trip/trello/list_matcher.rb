@@ -26,6 +26,26 @@ module RoundTrip
       area_to_list[area]      << list
       list_to_area[list.name] << area
     end
+
+    def errors
+      return @errors unless @errors.nil?
+
+      @errors = []
+
+      [:current, :done].each do |area|
+        if area_to_list[area].size == 0
+          @errors << "No lists found for #{area}"
+        end
+      end
+
+      lists.each do |list|
+        if list_to_area[list.name].size > 1
+          @errors << "Multiple matches found for list #{list.name}"
+        end
+      end
+
+      @errors
+    end
   end
 
   class Trello::ListMatcher
@@ -82,26 +102,6 @@ module RoundTrip
       @list_map
     end
 
-    def errors
-      return @errors unless @errors.nil?
-
-      @errors = []
-
-      [:current, :done].each do |area|
-        if list_map.area_to_list[area].size == 0
-          @errors << "No lists found for #{area}"
-        end
-      end
-
-      lists.each do |list|
-        if list_map.list_to_area[list.name].size > 1
-          @errors << "Multiple matches found for list #{list.name}"
-        end
-      end
-
-      @errors
-    end
-
     def to_s
       s = ''
 
@@ -120,11 +120,12 @@ module RoundTrip
         s << format % [area, matchers[area], names.join(', ')]
       end
 
-      if errors.size > 0
+      if list_map.errors.size > 0
         s << "\nErrors:\n"
-        s << errors.join("\n")
+        s << list_map.errors.join("\n")
         s << "\n"
       end
+
       s
     end
 
