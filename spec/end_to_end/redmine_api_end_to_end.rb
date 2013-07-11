@@ -1,6 +1,7 @@
 require 'net/https'
 require 'nokogiri'
 require 'yaml'
+require 'pp'
 
 # http://www.redmine.org/projects/redmine/wiki/Rest_api
 
@@ -56,6 +57,58 @@ describe 'Redmine API' do
       doc = parse(get('/projects.xml?offset=2'))
 
       expect(doc.root['offset']).to eq('2')
+    end
+  end
+
+  describe 'project' do
+    it 'gets a project' do
+      doc = parse(get("/projects/#{@redmine[:project][:id]}.xml"))
+
+      @redmine[:project].each do |name, value|
+        expect(doc.root.at(name.to_s).inner_text).to eq(value.to_s)
+      end
+    end
+  end
+
+  describe 'issues' do
+    it 'gets project issues' do
+      doc = parse(get("/issues.xml?project_id=#{@redmine[:project][:id]}"))
+
+      issues = doc.xpath('//issue')
+
+      expect(issues.size).to be > 0
+    end
+  end
+
+  describe 'issue' do
+    it 'gets an issue' do
+      doc = parse(get("/issues/#{@redmine[:issue][:id]}.xml"))
+
+      @redmine[:issue].each do |name, value|
+        expect(doc.root.at(name.to_s).inner_text).to eq(value.to_s)
+      end
+    end
+  end
+
+  describe 'issue_statuses' do
+    it 'gets issues statuses' do
+      doc = parse(get("/issue_statuses.xml"))
+
+      pp doc.root
+    end
+  end
+
+  describe 'issue_status' do
+    it 'gets an issue status' do
+      pending 'Not yet implemented in Redmine API'
+      doc = parse(get("/issue_statuses/#{@redmine[:status][:id]}.xml"))
+    end
+  end
+
+  describe 'tracker' do
+    it 'gets a tracker' do
+      pending 'Not yet implemented in Redmine API'
+      doc = parse(get("/trackers/#{@redmine[:tracker][:id]}.xml"))
     end
   end
 end
