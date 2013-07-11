@@ -11,16 +11,17 @@ require 'round_trip/services/trello_card_creator_service'
 module RoundTrip
   class ProjectSynchroniserService
     attr_reader :project
+    attr_reader :list_map
 
-    def initialize(project)
-      @project = project
+    def initialize(project, list_map)
+      @project, @list_map = project, list_map
     end
 
     def run
       RedmineDownloaderService.new(project).run
       TrelloDownloaderService.new(project).run
       TicketMergerService.new(project).run
-      MatchedTicketUpdaterService.new(project).run
+      MatchedTicketUpdaterService.new(project, list_map).run
       RedmineIssuePreparerService.new(project).run
       TrelloCardPreparerService.new(project).run
       RedmineIssueCreatorService.new(project).run
