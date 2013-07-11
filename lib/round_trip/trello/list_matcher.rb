@@ -3,32 +3,28 @@ module RoundTrip
 
   class Trello::ListMap
     attr_reader :lists
-    attr_reader :area_to_list
-    attr_reader :list_to_area
 
     def initialize(lists)
-      @lists  = lists
-      @errors = nil
-      prepare_mappings
+      @lists = lists
+      @area_to_list, @list_to_area = @errors = nil
+    end
+
+    def area_to_list
+      return @area_to_list unless @area_to_list.nil?
+
+      @area_to_list ||= Trello::ListMatcher::AREAS.inject({}) do |a, area|
+        a[area] = []
+        a
+      end
+    end
+
+    def list_to_area
+      @list_to_area ||= lists.inject({}) { |a, list| a[list.name] = []; a }
     end
 
     def add_mapping(area, list)
       area_to_list[area]      << list
       list_to_area[list.name] << area
-    end
-
-    private
-
-    def prepare_mappings
-      @area_to_list = {}
-      Trello::ListMatcher::AREAS.each do |area|
-        @area_to_list[area] = []
-      end
-
-      @list_to_area = {}
-      lists.each do |list|
-        @list_to_area[list.name] = []
-      end
     end
   end
 
