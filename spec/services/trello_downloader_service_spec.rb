@@ -31,21 +31,21 @@ module RoundTrip
         :closed => false,
       }
     end
-    let(:tickets_relation) { stub('ActiveRecord::Relation', :destroy_all => nil) }
-    let(:project) { stub('Project', :config => project_config) }
-    let(:authorizer) { stub('Trello::Authorizer', :client => client) }
-    let(:client) { stub('Trello::Client') }
-    let(:board) { stub('Trello::Board', :name => 'My Board', :cards => [card]) }
-    let(:card) { stub('Trello::Card', card_attributes) }
+    let(:tickets_relation) { double('ActiveRecord::Relation', :destroy_all => nil) }
+    let(:project) { double('Project', :config => project_config) }
+    let(:authorizer) { double('Trello::Authorizer', :client => client) }
+    let(:client) { double('Trello::Client') }
+    let(:board) { double('Trello::Board', :name => 'My Board', :cards => [card]) }
+    let(:card) { double('Trello::Card', card_attributes) }
 
     describe '#run' do
       subject { TrelloDownloaderService.new(project) }
 
       before do
-        Ticket.stubs(:where).with(:trello_board_id => trello_board_id).returns(tickets_relation)
-        Trello::Authorizer.stubs(:new).with(*trello_authorization_config).returns(authorizer)
-        client.stubs(:find).with(:boards, trello_board_id).returns(board)
-        Ticket.stubs(:create_from_trello_card).with(project, card)
+        Ticket.stub(:where).with(:trello_board_id => trello_board_id).and_return(tickets_relation)
+        Trello::Authorizer.stub(:new).with(*trello_authorization_config).and_return(authorizer)
+        client.stub(:find).with(:boards, trello_board_id).and_return(board)
+        Ticket.stub(:create_from_trello_card).with(project, card)
         subject.run
       end
 

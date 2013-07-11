@@ -11,35 +11,36 @@ module RoundTrip
       let(:trello_ticket_merged_to_redmine) { create(:trello_ticket, project: project) }
       let(:redmine_ticket) do
         t = create(:redmine_ticket, redmine_trello_id: trello_ticket_merged_to_redmine.trello_id, project: project)
-        t.stubs(:merge_trello)
-        t.stubs(:save!)
+        t.stub(:merge_trello)
+        t.stub(:save!)
         t
       end
       let(:redmine_ticket_merged_to_trello) { create(:redmine_ticket, project: project) }
       let(:trello_ticket) do
         t = create(:trello_ticket, trello_redmine_id: redmine_ticket_merged_to_trello.redmine_id, project: project)
-        t.stubs(:merge_redmine)
-        t.stubs(:save!)
+        t.stub(:merge_redmine)
+        t.stub(:save!)
         t
       end
-      let(:not_united_relation) { stub('ActiveRecord::Relation') }
-      let(:redmine_has_trello_id_relation) { stub('ActiveRecord::Relation', :all => [redmine_ticket]) }
-      let(:trello_has_redmine_id_relation) { stub('ActiveRecord::Relation', :all => [trello_ticket]) }
+      let(:not_united_relation) { double('ActiveRecord::Relation for project, not united') }
+      let(:not_united_without_redmine_relation) { double('ActiveRecord::Relation for project, not united, without redmine') }
+      let(:redmine_has_trello_id_relation) { double('ActiveRecord::Relation', :all => [redmine_ticket]) }
+      let(:trello_has_redmine_id_relation) { double('ActiveRecord::Relation', :all => [trello_ticket]) }
 
       subject { TicketMergerService.new(project) }
 
       before do
         trello_ticket
-        Ticket.stubs(:check_repeated_redmine_ids).with(redmine_project_id)
-        Ticket.stubs(:check_repeated_trello_ids).with(trello_board_id)
-        Ticket.stubs(:check_repeated_redmine_subjects).with(redmine_project_id)
-        Ticket.stubs(:check_repeated_trello_names).with(trello_board_id)
-        Ticket.stubs(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).returns([redmine_ticket_merged_to_trello])
-        Ticket.stubs(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).returns([trello_ticket_merged_to_redmine])
-        Ticket.stubs(:redmine_subject_with_matching_trello_name).with(project).returns([])
-        for_project_scope.stubs(:not_united).returns(not_united_relation)
-        not_united_relation.stubs(:redmine_has_trello_id).returns(redmine_has_trello_id_relation)
-        not_united_relation.stubs(:trello_has_redmine_id).returns(trello_has_redmine_id_relation)
+        Ticket.stub(:check_repeated_redmine_ids).with(redmine_project_id)
+        Ticket.stub(:check_repeated_trello_ids).with(trello_board_id)
+        Ticket.stub(:check_repeated_redmine_subjects).with(redmine_project_id)
+        Ticket.stub(:check_repeated_trello_names).with(trello_board_id)
+        Ticket.stub(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).and_return([redmine_ticket_merged_to_trello])
+        Ticket.stub(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).and_return([trello_ticket_merged_to_redmine])
+        Ticket.stub(:redmine_subject_with_matching_trello_name).with(project).and_return([])
+        for_project_scope.stub(:not_united).and_return(not_united_relation)
+        not_united_relation.stub(:redmine_has_trello_id).and_return(redmine_has_trello_id_relation)
+        not_united_relation.stub(:trello_has_redmine_id).and_return(trello_has_redmine_id_relation)
       end
 
       context 'config checks' do
@@ -48,7 +49,7 @@ module RoundTrip
           it "expects a #{name}" do
             partial = project_attributes[:config].clone
             partial.delete(key)
-            project = stub('Project', :config => partial)
+            project = double('Project', :config => partial)
             subject = TicketMergerService.new(project)
 
             expect {
@@ -100,7 +101,7 @@ module RoundTrip
         end
 
         it 'fails if the matching trello ticket is missing' do
-          Ticket.stubs(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).raises(ActiveRecord::RecordNotFound)
+          Ticket.stub(:where).with(trello_id: trello_ticket_merged_to_redmine.trello_id).and_raise(ActiveRecord::RecordNotFound)
 
           expect {
             subject.run
@@ -122,7 +123,7 @@ module RoundTrip
         end
 
         it 'fails if the matching redmine issue is missing' do
-          Ticket.stubs(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).raises(ActiveRecord::RecordNotFound)
+          Ticket.stub(:where).with(redmine_id: redmine_ticket_merged_to_trello.redmine_id).and_raise(ActiveRecord::RecordNotFound)
 
           expect {
             subject.run
@@ -142,8 +143,10 @@ module RoundTrip
         let(:trello_ticket_with_matching_title) { create(:trello_ticket, project: project, trello_name: matching_title) }
 
         before do
-          Ticket.stubs(:redmine_subject_with_matching_trello_name).with(project).returns([redmine_ticket_with_matching_title])
-          redmine_ticket_with_matching_title.stubs(:merge_trello).with(trello_ticket_with_matching_title)
+          Ticket.stub(:redmine_subject_with_matching_trello_name).with(project).and_return([redmine_ticket_with_matching_title])
+          not_united_relation.stub(:without_redmine).and_return(not_united_without_redmine_relation)
+          not_united_without_redmine_relation.stub_chain(:where, :first).and_return(trello_ticket_with_matching_title)
+          redmine_ticket_with_matching_title.stub(:merge_trello).with(trello_ticket_with_matching_title)
         end
 
         it 'requests suitable tickets' do

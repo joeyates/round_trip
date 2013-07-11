@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'ruby-trello'
   s.add_dependency 'sqlite3'
 
-  s.add_development_dependency 'bourne'
   s.add_development_dependency 'cucumber'
   s.add_development_dependency 'database_cleaner'
   s.add_development_dependency 'factory_girl'

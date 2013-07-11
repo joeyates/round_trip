@@ -7,7 +7,7 @@ module RoundTrip
     describe '#run' do
       include_context 'ticket project scoping'
       let(:project) { create(:project) }
-      let(:list_map) { stub('Trello::ListMap') }
+      let(:list_map) { double('Trello::ListMap') }
       let(:old) { 10.days.ago }
       let(:new) { 2.days.ago }
       let(:redmine_subject_1) { 'Redmine subject 1' }
@@ -46,10 +46,11 @@ module RoundTrip
       subject { MatchedTicketUpdaterService.new(project, list_map) }
 
       before do
-        for_project_scope.stubs(:redmine_newer).returns([recent_redmine])
-        for_project_scope.stubs(:trello_newer).returns([recent_trello])
-        recent_redmine.stubs(:save!)
-        recent_trello.stubs(:save!)
+        for_project_scope.stub(:redmine_newer).and_return([recent_redmine])
+        for_project_scope.stub(:trello_newer).and_return([recent_trello])
+        recent_redmine.stub(:save!)
+        recent_trello.stub(:save!)
+        list_map.stub(:list_for_id).and_return(nil)
       end
 
       it 'searches among project tickets' do
@@ -84,6 +85,12 @@ module RoundTrip
 
             expect(recent_redmine.send(from)).to eq(value)
           end
+        end
+
+        it 'gets the Trello list' do
+          subject.run
+
+          expect(list_map).to have_received(:list_for_id).with(recent_redmine.trello_list_id)
         end
 
         context 'Trello card is in' do

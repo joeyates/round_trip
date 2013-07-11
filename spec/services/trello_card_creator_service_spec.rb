@@ -5,11 +5,11 @@ module RoundTrip
     it_behaves_like 'a class with constructor arity', 1
 
     describe '#run' do
-      let(:without_trello_relation) { stub('ActiveRecord::Relation') }
+      let(:without_trello_relation) { double('ActiveRecord::Relation') }
 
       before do
-        for_project_scope.stubs(:without_trello).returns(without_trello_relation)
-        without_trello_relation.stubs(:all).returns([])
+        for_project_scope.stub(:without_trello).and_return(without_trello_relation)
+        without_trello_relation.stub(:all).and_return([])
       end
 
       subject { TrelloCardCreatorService.new(project) }

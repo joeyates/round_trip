@@ -1,7 +1,5 @@
-require 'bourne'
-
 RSpec.configure do |config|
   config.order = 'random'
-  config.mock_with :mocha
+  config.mock_with :rspec
 end
 

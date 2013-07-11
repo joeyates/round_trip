@@ -6,7 +6,7 @@ module RoundTrip
 
     describe '#run' do
       include_context 'ticket project scoping'
-      let(:not_united_relation) { stub('ActiveRecord::Relation not_united') }
+      let(:not_united_relation) { double('ActiveRecord::Relation not_united') }
       let(:redmine_subject_1) { 'Redmine subject 1' }
       let(:redmine_description_1) { 'Redmine description 1' }
       let(:redmine_ticket) do
@@ -20,9 +20,9 @@ module RoundTrip
       let(:redmine_id) { redmine_ticket.redmine_id }
 
       before do
-        for_project_scope.stubs(:not_united).returns(not_united_relation)
-        not_united_relation.stubs(:without_trello).returns([redmine_ticket])
-        redmine_ticket.stubs(:save!)
+        for_project_scope.stub(:not_united).and_return(not_united_relation)
+        not_united_relation.stub(:without_trello).and_return([redmine_ticket])
+        redmine_ticket.stub(:save!)
       end
 
       subject { TrelloCardPreparerService.new(project) }

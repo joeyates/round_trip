@@ -5,14 +5,14 @@ module RoundTrip
     let(:redmine_url) { generate(:redmine_url) }
     let(:redmine_key) { generate(:redmine_key) }
     let(:config) { {redmine_url: redmine_url, redmine_key: redmine_key} }
-    let(:projects) { [ stub('Redmine::Project') ] }
+    let(:projects) { [ double('Redmine::Project') ] }
 
     subject { create(:redmine_account, config: config) }
 
     describe'#projects' do
       before do
-        Redmine::Resource.stubs(:setup)
-        Redmine::Project.stubs(:all).returns(projects)
+        Redmine::Resource.stub(:setup)
+        Redmine::Project.stub(:all).and_return(projects)
       end
 
       it 'sets up the resource' do

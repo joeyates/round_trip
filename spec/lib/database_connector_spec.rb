@@ -12,10 +12,10 @@ module RoundTrip
     end
 
     before do
-      File.stubs(:writable?).with(database_path).returns(true)
-      File.stubs(:exist?).with(database_pathname).returns(true)
-      File.stubs(:writable?).with(database_pathname).returns(true)
-      ActiveRecord::Base.stubs(:establish_connection).with(db_config)
+      File.stub(:writable?).with(database_path).and_return(true)
+      File.stub(:exist?).with(database_pathname).and_return(true)
+      File.stub(:writable?).with(database_pathname).and_return(true)
+      ActiveRecord::Base.stub(:establish_connection).with(db_config)
     end
 
     subject { DatabaseConnector.new(database_pathname) }
@@ -28,7 +28,7 @@ module RoundTrip
         end
 
         it 'throws an error unless the database path is writable' do
-          File.stubs(:writable?).with(database_path).returns(false)
+          File.stub(:writable?).with(database_path).and_return(false)
 
           expect {
             subject.connect
@@ -46,13 +46,13 @@ module RoundTrip
         end
 
         it "doesn't check if the database is writable if it doesn't exist" do
-          File.stubs(:exist?).with(database_pathname).returns(false)
+          File.stub(:exist?).with(database_pathname).and_return(false)
           subject.connect
-          expect(File).to have_received(:writable?).with(database_pathname).never
+          expect(File).to_not have_received(:writable?).with(database_pathname)
         end
 
         it 'throws an error if the database file exists, but is not writable' do
-          File.stubs(:writable?).with(database_pathname).returns(false)
+          File.stub(:writable?).with(database_pathname).and_return(false)
 
           expect {
             subject.connect

@@ -6,7 +6,7 @@ module RoundTrip
 
     describe '#run' do
       include_context 'ticket project scoping'
-      let(:without_redmine_relation) { stub('ActiveRecord::Relation') }
+      let(:without_redmine_relation) { double('ActiveRecord::Relation') }
       let(:redmine_project_id) { generate(:redmine_project_id) }
       let(:ticket_attributes) do
         attributes_for(
@@ -22,12 +22,12 @@ module RoundTrip
           project_id: redmine_project_id,
         }
       end
-      let(:issue) { stub('ActiveResource::Base', save: nil) }
+      let(:issue) { double('ActiveResource::Base', save: nil) }
 
       before do
-        for_project_scope.stubs(:without_redmine).returns(without_redmine_relation)
-        without_redmine_relation.stubs(:all).returns([unpushed_redmine_ticket])
-        Redmine::Issue.stubs(:new).with(issue_attributes).returns(issue)
+        for_project_scope.stub(:without_redmine).and_return(without_redmine_relation)
+        without_redmine_relation.stub(:all).and_return([unpushed_redmine_ticket])
+        Redmine::Issue.stub(:new).with(issue_attributes).and_return(issue)
       end
 
       subject { RedmineIssueCreatorService.new(project) }

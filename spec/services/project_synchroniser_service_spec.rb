@@ -2,7 +2,7 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe ProjectSynchroniserService do
-    it_behaves_like 'a class with constructor arity', 1
+    it_behaves_like 'a class with constructor arity', 2
 
     describe '#run' do
       let(:trello_board_id) { 'aaa' }
@@ -17,27 +17,28 @@ module RoundTrip
           :project_id => redmine_project_id
         }
       end
-      let(:project) { stub('Project', :trello => trello_config, :redmine => redmine_config) }
-      let(:trello_downloader_service) { stub('TrelloDownloaderService', :run => nil) }
-      let(:redmine_downloader_service) { stub('RedmineDownloaderService', :run => nil) }
-      let(:ticket_merger_service) { stub('TicketMergerService', :run => nil) }
-      let(:matched_ticket_updater_service) { stub('MatchedTicketUpdaterService', :run => nil) }
-      let(:redmine_issue_preparer_service) { stub('RedmineIssuePreparerService', :run => nil) }
-      let(:trello_card_preparer_service) { stub('TrelloCardPreparerService', :run => nil) }
-      let(:redmine_issue_creator_service) { stub('RedmineIssueCreatorService', run: nil) }
-      let(:trello_card_creator_service) { stub('TrelloCardCreatorService', run: nil) }
+      let(:project) { double('Project', :trello => trello_config, :redmine => redmine_config) }
+      let(:list_map) { double('Trello::ListMap') }
+      let(:trello_downloader_service) { double('TrelloDownloaderService', :run => nil) }
+      let(:redmine_downloader_service) { double('RedmineDownloaderService', :run => nil) }
+      let(:ticket_merger_service) { double('TicketMergerService', :run => nil) }
+      let(:matched_ticket_updater_service) { double('MatchedTicketUpdaterService', :run => nil) }
+      let(:redmine_issue_preparer_service) { double('RedmineIssuePreparerService', :run => nil) }
+      let(:trello_card_preparer_service) { double('TrelloCardPreparerService', :run => nil) }
+      let(:redmine_issue_creator_service) { double('RedmineIssueCreatorService', run: nil) }
+      let(:trello_card_creator_service) { double('TrelloCardCreatorService', run: nil) }
 
-      subject { ProjectSynchroniserService.new(project) }
+      subject { ProjectSynchroniserService.new(project, list_map) }
 
       before do
-        RedmineDownloaderService.stubs(:new).with(project).returns(redmine_downloader_service)
-        TrelloDownloaderService.stubs(:new).with(project).returns(trello_downloader_service)
-        TicketMergerService.stubs(:new).with(project).returns(ticket_merger_service)
-        MatchedTicketUpdaterService.stubs(:new).with(project).returns(matched_ticket_updater_service)
-        RedmineIssuePreparerService.stubs(:new).with(project).returns(redmine_issue_preparer_service)
-        TrelloCardPreparerService.stubs(:new).with(project).returns(trello_card_preparer_service)
-        RedmineIssueCreatorService.stubs(:new).with(project).returns(redmine_issue_creator_service)
-        TrelloCardCreatorService.stubs(:new).with(project).returns(trello_card_creator_service)
+        RedmineDownloaderService.stub(:new).with(project).and_return(redmine_downloader_service)
+        TrelloDownloaderService.stub(:new).with(project).and_return(trello_downloader_service)
+        TicketMergerService.stub(:new).with(project).and_return(ticket_merger_service)
+        MatchedTicketUpdaterService.stub(:new).with(project, list_map).and_return(matched_ticket_updater_service)
+        RedmineIssuePreparerService.stub(:new).with(project).and_return(redmine_issue_preparer_service)
+        TrelloCardPreparerService.stub(:new).with(project).and_return(trello_card_preparer_service)
+        RedmineIssueCreatorService.stub(:new).with(project).and_return(redmine_issue_creator_service)
+        TrelloCardCreatorService.stub(:new).with(project).and_return(trello_card_creator_service)
         subject.run
       end
 
@@ -57,7 +58,7 @@ module RoundTrip
       end
 
       it "syncs all matched tickets' state" do
-        expect(MatchedTicketUpdaterService).to have_received(:new).with(project)
+        expect(MatchedTicketUpdaterService).to have_received(:new).with(project, list_map)
         expect(matched_ticket_updater_service).to have_received(:run)
       end
 

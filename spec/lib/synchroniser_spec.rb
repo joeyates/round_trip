@@ -3,12 +3,15 @@ require 'spec_helper'
 module RoundTrip
   describe Synchroniser do
     describe '#run' do
-      let(:project) { stub('Project') }
-      let(:project_synchroniser) { stub('ProjectSynchroniser', :run => nil) }
+      let(:project) { double('Project') }
+      let(:project_synchroniser) { double('ProjectSynchroniser', :run => nil) }
+      let(:list_matcher) { double('ListMatcher', list_map: list_map) }
+      let(:list_map) { double('ListMap', errors: []) }
 
       before do
-        Project.stubs(:all).returns([project])
-        ProjectSynchroniserService.stubs(:new).returns(project_synchroniser)
+        Project.stub(:all).and_return([project])
+        ProjectSynchroniserService.stub(:new).and_return(project_synchroniser)
+        Trello::ListMatcher.stub(:new).with(project).and_return(list_matcher)
       end
 
       it 'loads all projects' do
@@ -20,7 +23,7 @@ module RoundTrip
       it 'creates a project synchroniser for each project' do
         subject.run
 
-        expect(ProjectSynchroniserService).to have_received(:new).with(project)
+        expect(ProjectSynchroniserService).to have_received(:new).with(project, list_map)
       end
 
       it 'runs the synchroniser service' do

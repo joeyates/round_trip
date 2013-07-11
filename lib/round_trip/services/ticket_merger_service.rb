@@ -28,7 +28,7 @@ module RoundTrip
       end
 
       Ticket.redmine_subject_with_matching_trello_name(project).each do |redmine_ticket|
-        trello_ticket = load_matching_trello_ticket(redmine_ticket)
+        trello_ticket = not_united.without_redmine.where(trello_name: redmine_ticket.redmine_subject).first or raise ActiveRecord::RecordNotFound
         redmine_ticket.merge_trello trello_ticket
       end
     end
@@ -41,10 +41,6 @@ module RoundTrip
 
     def load_trello_ticket(redmine_ticket)
       Ticket.where(trello_id: redmine_ticket.redmine_trello_id).first or raise ActiveRecord::RecordNotFound
-    end
-
-    def load_matching_trello_ticket(redmine_ticket)
-      Ticket.not_united.without_redmine.where(trello_name: redmine_ticket.redmine_subject).first or raise ActiveRecord::RecordNotFound
     end
   end
 end

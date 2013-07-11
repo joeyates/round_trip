@@ -14,21 +14,21 @@ module RoundTrip
         :redmine_key => redmine_key,
       }
     end
-    let(:project) { stub('Project', :config => project_config) }
-    let(:tickets_relation) { stub('ActiveRecord::Relation', :destroy_all => nil) }
+    let(:project) { double('Project', :config => project_config) }
+    let(:tickets_relation) { double('ActiveRecord::Relation', :destroy_all => nil) }
     let(:issue_find_params) do
       [:all, :params => {:project_id => redmine_project_id}]
     end
-    let(:issue_resource) { stub('Redmine::Issue') }
+    let(:issue_resource) { double('Redmine::Issue') }
 
     describe '#run' do
       subject { RedmineDownloaderService.new(project) }
 
       before do
-        Ticket.stubs(:where).with(:redmine_project_id => redmine_project_id).returns(tickets_relation)
-        Redmine::Resource.stubs(:setup).with(redmine_url, redmine_key)
-        Redmine::Issue.stubs(:find).with(*issue_find_params).returns([issue_resource])
-        Ticket.stubs(:create_from_redmine_resource).with(project, issue_resource)
+        Ticket.stub(:where).with(:redmine_project_id => redmine_project_id).and_return(tickets_relation)
+        Redmine::Resource.stub(:setup).with(redmine_url, redmine_key)
+        Redmine::Issue.stub(:find).with(*issue_find_params).and_return([issue_resource])
+        Ticket.stub(:create_from_redmine_resource).with(project, issue_resource)
         subject.run
       end
 

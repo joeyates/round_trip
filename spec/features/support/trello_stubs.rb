@@ -19,7 +19,12 @@ module TrelloStubs
     @board.stub(:name).and_return('My board')
     @board.stub(:id).and_return('abc12345')
     names = ['Ideas', 'Backlog 123', 'Sprint 95', 'My feature', 'Done', 'Archived']
-    lists = names.map { |name| l = stub('List'); l.stub(:name).and_return(name); l }
+    lists = names.map do |name|
+      list = stub('List')
+      list.stub(:name).and_return(name)
+      list.stub(:closed).and_return(false)
+      list
+    end
     @board.stub(:lists).and_return(lists)
     @trello_client.stub(:find).with(:boards, anything).and_return(@board)
   end
