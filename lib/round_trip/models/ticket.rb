@@ -32,14 +32,14 @@ module RoundTrip
     scope :for_project,           ->(project_id) { where(project_id: project_id) }
     scope :for_redmine_project,   ->(redmine_project_id) { where(:redmine_project_id => redmine_project_id) }
     scope :for_trello_board,      ->(trello_board_id) { where(:trello_board_id => trello_board_id) }
-    scope :united,                where(at[:redmine_id].not_eq(nil).and(at[:trello_id].not_eq(nil)))
-    scope :not_united,            where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil)))
-    scope :without_redmine,       where(at[:redmine_id].eq(nil))
-    scope :without_trello,        where(at[:trello_id].eq(nil))
-    scope :redmine_has_trello_id, where(at[:redmine_trello_id].not_eq(nil))
-    scope :trello_has_redmine_id, where(at[:trello_redmine_id].not_eq(nil))
-    scope :redmine_newer,         united.where(at[:redmine_updated_on].gt(at[:trello_last_activity_date]))
-    scope :trello_newer,          united.where(at[:trello_last_activity_date].gt(at[:redmine_updated_on]))
+    scope :united,                -> { where(at[:redmine_id].not_eq(nil).and(at[:trello_id].not_eq(nil))) }
+    scope :not_united,            -> { where(at[:redmine_id].eq(nil).or(at[:trello_id].eq(nil))) }
+    scope :without_redmine,       -> { where(at[:redmine_id].eq(nil)) }
+    scope :without_trello,        -> { where(at[:trello_id].eq(nil)) }
+    scope :redmine_has_trello_id, -> { where(at[:redmine_trello_id].not_eq(nil)) }
+    scope :trello_has_redmine_id, -> { where(at[:trello_redmine_id].not_eq(nil)) }
+    scope :redmine_newer,         -> { united.where(at[:redmine_updated_on].gt(at[:trello_last_activity_date])) }
+    scope :trello_newer,          -> { united.where(at[:trello_last_activity_date].gt(at[:redmine_updated_on])) }
 
     def self.redmine_subject_with_matching_trello_name(project)
       query = <<-EOT
