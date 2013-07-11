@@ -86,7 +86,7 @@ module RoundTrip
           end
         end
 
-        context 'ticket is in' do
+        context 'Trello card is in' do
           context 'ideas' do
             it "sets the tracker to 'Idea'"
             it 'sets the status to new'
@@ -157,7 +157,7 @@ module RoundTrip
           expect(recent_trello).to have_received(:save!)
         end
 
-        context 'issue is' do
+        context 'Redmine issue is' do
           context "in 'ideas' tracker" do
             it "sets the list to 'ideas'"
           end
