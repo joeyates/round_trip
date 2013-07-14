@@ -9,8 +9,9 @@ Before('@highline') do
       driver.inject("\n---- Page separator ---\n")
     end
 
-    include RedmineStubs
+    extend RedmineStubs
     extend TrelloStubs
+    stub_redmine
     stub_trello
 
     configurator = RoundTrip::Configurator.new(driver.high_line)
