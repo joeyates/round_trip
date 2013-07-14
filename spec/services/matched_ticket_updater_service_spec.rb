@@ -101,6 +101,69 @@ module RoundTrip
           expect(list_map).to have_received(:list_to_area).with(trello_list)
         end
 
+        context 'Redmine issue is' do
+          context "in 'ideas' tracker" do
+            it "sets the list to 'ideas'"
+          end
+
+          context 'new issue, no version' do
+            it "sets the list to 'backlog'"
+          end
+
+          context 'new issue, current version' do
+            it "sets the list to 'current'"
+          end
+
+          context 'in progress, current version' do
+            context 'unmatched lists exist' do
+              it "sets puts the card in the first unmatched, non-archived list"
+            end
+
+            context 'no unmatched lists exist' do
+              it "creates a list called 'In progress'"
+              it 'puts the card in the new list'
+            end
+          end
+
+          context 'feedback, current version' do
+            it "puts the card in the 'done' list"
+          end
+
+          context 'closed' do
+            it "creates an archived list for the current sprint"
+            it 'puts the card in the archived list'
+          end
+        end
+      end
+
+      context 'where trello is more recent' do
+        it 'finds tickets' do
+          subject.run
+
+          expect(for_project_scope).to have_received(:trello_newer)
+        end
+
+        [
+          [:trello_name, :redmine_subject, :trello_name_2],
+          [:trello_description, :redmine_description, :trello_description_2],
+        ].each do |from, to, let_name|
+          it "copies #{from} to #{to}" do
+            value = send(let_name)
+
+            subject.run
+
+            expect(recent_trello.send(to)).to eq(value)
+          end
+
+          it "leaves #{from} unchanged" do
+            value = send(let_name)
+
+            subject.run
+
+            expect(recent_trello.send(from)).to eq(value)
+          end
+        end
+
         context 'Trello card is in' do
           context 'ideas' do
             before do
@@ -144,75 +207,12 @@ module RoundTrip
             it "sets the status to 'closed'"
           end
         end
-      end
-
-      context 'where trello is more recent' do
-        it 'finds tickets' do
-          subject.run
-
-          expect(for_project_scope).to have_received(:trello_newer)
-        end
-
-        [
-          [:trello_name, :redmine_subject, :trello_name_2],
-          [:trello_description, :redmine_description, :trello_description_2],
-        ].each do |from, to, let_name|
-          it "copies #{from} to #{to}" do
-            value = send(let_name)
-
-            subject.run
-
-            expect(recent_trello.send(to)).to eq(value)
-          end
-
-          it "leaves #{from} unchanged" do
-            value = send(let_name)
-
-            subject.run
-
-            expect(recent_trello.send(from)).to eq(value)
-          end
-        end
 
         it 'saves changes' do
           subject.run
 
           expect(recent_redmine).to have_received(:save!)
           expect(recent_trello).to have_received(:save!)
-        end
-
-        context 'Redmine issue is' do
-          context "in 'ideas' tracker" do
-            it "sets the list to 'ideas'"
-          end
-
-          context 'new issue, no version' do
-            it "sets the list to 'backlog'"
-          end
-
-          context 'new issue, current version' do
-            it "sets the list to 'current'"
-          end
-
-          context 'in progress, current version' do
-            context 'unmatched lists exist' do
-              it "sets puts the card in the first unmatched, non-archived list"
-            end
-
-            context 'no unmatched lists exist' do
-              it "creates a list called 'In progress'"
-              it 'puts the card in the new list'
-            end
-          end
-
-          context 'feedback, current version' do
-            it "puts the card in the 'done' list"
-          end
-
-          context 'closed' do
-            it "creates an archived list for the current sprint"
-            it 'puts the card in the archived list'
-          end
         end
       end
     end
