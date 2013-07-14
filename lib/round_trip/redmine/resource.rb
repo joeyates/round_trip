@@ -65,5 +65,13 @@ module RoundTrip
   class Redmine::Issue < Redmine::Resource
     self.collection_parser = Redmine::IssueCollection
   end
+
+  class Redmine::TrackerCollection < Redmine::Collection
+    collection_name 'trackers'
+  end
+
+  class Redmine::Tracker < Redmine::Resource
+    self.collection_parser = Redmine::TrackerCollection
+  end
 end
 
