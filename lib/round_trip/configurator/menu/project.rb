@@ -3,6 +3,7 @@ require 'round_trip/configurator/menu/account_chooser'
 require 'round_trip/configurator/menu/redmine_project_chooser'
 require 'round_trip/configurator/menu/trello_board_chooser'
 require 'round_trip/configurator/menu/trello_list_matcher_input'
+require 'round_trip/redmine/tracker_map'
 require 'round_trip/trello/list_matcher'
 
 module RoundTrip
@@ -45,8 +46,8 @@ module RoundTrip
         end
         if project.redmine_account
           menu.choice('redmine project') do
-           redmine_project_id = Configurator::Menu::RedmineProjectChooser.new(high_line, project.redmine_account).run
-           set_config(:redmine_project_id, redmine_project_id) unless redmine_project_id.nil?
+            redmine_project_id = Configurator::Menu::RedmineProjectChooser.new(high_line, project.redmine_account).run
+            set_config(:redmine_project_id, redmine_project_id) unless redmine_project_id.nil?
           end
         end
         menu.choice('trello account') do
@@ -59,6 +60,18 @@ module RoundTrip
           menu.choice('trello board') do
             trello_board_id = Configurator::Menu::TrelloBoardChooser.new(high_line, project.trello_account).run
             set_config(:trello_board_id, trello_board_id) unless trello_board_id.nil?
+          end
+        end
+        if project.config[:redmine_project_id]
+          menu.choice('check redmine project') do
+            tracker_map = Redmine::TrackerMap.new(project)
+            message =
+              if tracker_map.trackers.include?(:ideas)
+                'Project is OK'
+              else
+                'Please add an Ideas tracker to the Redmine installation'
+              end
+            high_line.ask "#{message}\nPress a key... "
           end
         end
         if project.config[:trello_board_id]

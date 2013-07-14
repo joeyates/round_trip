@@ -42,6 +42,7 @@ module RoundTrip
           project: project
         )
       end
+      let(:trello_list) { double('Trello::List') }
 
       subject { MatchedTicketUpdaterService.new(project, list_map) }
 
@@ -50,7 +51,8 @@ module RoundTrip
         for_project_scope.stub(:trello_newer).and_return([recent_trello])
         recent_redmine.stub(:save!)
         recent_trello.stub(:save!)
-        list_map.stub(:list_for_id).and_return(nil)
+        list_map.stub(:list_for_id).and_return(trello_list)
+        list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
       end
 
       it 'searches among project tickets' do
@@ -93,9 +95,24 @@ module RoundTrip
           expect(list_map).to have_received(:list_for_id).with(recent_redmine.trello_list_id)
         end
 
+        it 'gets the area for the Trello list' do
+          subject.run
+
+          expect(list_map).to have_received(:list_to_area).with(trello_list)
+        end
+
         context 'Trello card is in' do
           context 'ideas' do
-            it "sets the tracker to 'Idea'"
+            before do
+              list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
+            end
+
+            it "sets the tracker to 'Idea'" do
+              subject.run
+
+              expect(recent_redmine.tracker_id).to eq('Idea')
+            end
+
             it 'sets the status to new'
             it 'unsets the version'
           end

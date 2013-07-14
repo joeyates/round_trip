@@ -14,8 +14,16 @@ Given /^I already have a Trello account called '([^']+)'/ do |name|
   @trello_account = create(:trello_account, name: name)
 end
 
-Given /^I edit an existing Redmine account$/ do
+Given 'I have a Redmine account' do
   @redmine_account = create(:redmine_account)
+  @redmine_account.config = @redmine_account.config.merge(
+    redmine_url: RedmineStubs::FAKE_INSTALLATIONS[:good],
+  )
+  @redmine_account.save!
+end
+
+Given /^I edit an existing Redmine account$/ do
+  step 'I have a Redmine account'
   @client.type 'manage accounts'
   @client.type @redmine_account.name
 end
@@ -36,7 +44,7 @@ end
 
 Given 'I have a project with accounts set' do
   step 'I have a project'
-  @redmine_account = create(:redmine_account)
+  step 'I have a Redmine account'
   @trello_account = create(:trello_account)
   @project.redmine_account = @redmine_account
   @project.trello_account = @trello_account
@@ -48,13 +56,25 @@ Given 'I edit the project' do
   @client.type @project.name
 end
 
-Given /^I edit an existing project$/ do
+Given 'I edit an existing project' do
   step 'I have a project'
   step 'I edit the project'
 end
 
-Given /^I edit a project with accounts set$/ do
+Given 'I edit a project with accounts set' do
   step 'I have a project with accounts set'
+  step 'I edit the project'
+end
+
+Given 'I edit a project with a badly configured Redmine project set' do
+  extend RedmineStubs
+  stub_redmine
+  step 'I have a project with accounts set'
+  @project.config = @project.config.merge(
+    redmine_url:        RedmineStubs::FAKE_INSTALLATIONS[:no_ideas_tracker],
+    redmine_project_id: @redmine_no_ideas_project.id
+  )
+  @project.save!
   step 'I edit the project'
 end
 

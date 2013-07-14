@@ -54,7 +54,12 @@ Feature: Configure projects
     And I type 'y'
     Then I should see text matching '1. Project \d+'
 
-  Scenario: View Trello lists
+  Scenario: Check Redmine project
+    Given I edit a project with a badly configured Redmine project set
+    When I type 'check redmine project'
+    Then I should see 'Please add an Ideas tracker to the Redmine installation'
+
+  Scenario: View Trello list matchers
     Given I edit a project with a Trello board set
     When I type 'trello list matchers'
     Then I should see 'configure lists'
