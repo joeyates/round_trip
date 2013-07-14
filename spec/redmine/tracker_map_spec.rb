@@ -3,7 +3,7 @@ require 'round_trip/redmine/tracker_map'
 
 module RoundTrip::Redmine
   describe TrackerMap do
-    let(:project) { double('Project') }
+    let(:project) { double('Project', config: {}) }
     let(:tracker_ids) { {ideas: 12345} }
     let(:trackers) do
       {
