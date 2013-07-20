@@ -22,6 +22,8 @@ module RoundTrip
           {
             :id => ticket_attributes[:redmine_id],
             :project => double('Redmine::Issue', :id => ticket_attributes[:redmine_project_id]),
+            :tracker => double('Redmine::Tracker', :id => ticket_attributes[:redmine_tracker_id]),
+            :status => double('Redmine::Status', :id => ticket_attributes[:redmine_status_id]),
             :updated_on => ticket_attributes[:redmine_updated_on],
             :subject => ticket_attributes[:redmine_subject],
             :description => ticket_attributes[:redmine_description],

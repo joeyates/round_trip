@@ -12,6 +12,8 @@ module RoundTrip
   redmine_project_id         integer   
   redmine_subject            string    
   redmine_description        text      
+  redmine_tracker_id         integer
+  redmine_status_id          integer
   redmine_updated_on         datetime  
   redmine_trello_id          integer
   trello_id                  string    
@@ -63,6 +65,8 @@ module RoundTrip
         :redmine_updated_on  => resource.updated_on,
         :redmine_subject     => resource.subject,
         :redmine_description => resource.description,
+        :redmine_tracker_id  => resource.tracker.id,
+        :redmine_status_id   => resource.status.id,
       }
       m = resource.description.match(/^\#\# Trello card id: (\w+) \#\#$/)
       if m
@@ -164,6 +168,8 @@ module RoundTrip
       self.redmine_project_id  = from.redmine_project_id
       self.redmine_subject     = from.redmine_subject
       self.redmine_description = from.redmine_description
+      self.redmine_tracker_id  = from.redmine_tracker_id 
+      self.redmine_status_id   = from.redmine_status_id 
       self.redmine_updated_on  = from.redmine_updated_on
     end
 
