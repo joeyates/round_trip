@@ -2,12 +2,14 @@ require 'model_spec_helper'
 
 module RoundTrip
   describe MatchedTicketUpdaterService do
-    it_behaves_like 'a class with constructor arity', 2
+    it_behaves_like 'a class with constructor arity', 4
 
     describe '#run' do
       include_context 'ticket project scoping'
       let(:project) { create(:project) }
-      let(:list_map) { double('Trello::ListMap') }
+      let(:trello_list_map) { double('Trello::ListMap') }
+      let(:redmine_trackers) { double('Redmine::Trackers') }
+      let(:redmine_statuses) { double('Redmine::Statuses') }
       let(:old) { 10.days.ago }
       let(:new) { 2.days.ago }
       let(:redmine_subject_1) { 'Redmine subject 1' }
@@ -43,22 +45,25 @@ module RoundTrip
         )
       end
       let(:trello_list) { double('Trello::List') }
+      let(:idea_tracker_id) { generate(:redmine_tracker_id) }
+      let(:ideas_tracker) { double('Redmine::Tracker', id: idea_tracker_id) }
 
-      subject { MatchedTicketUpdaterService.new(project, list_map) }
+      subject { MatchedTicketUpdaterService.new(project, trello_list_map, redmine_trackers, redmine_statuses) }
 
       before do
         for_project_scope.stub(:redmine_newer).and_return([recent_redmine])
         for_project_scope.stub(:trello_newer).and_return([recent_trello])
         recent_redmine.stub(:save!)
         recent_trello.stub(:save!)
-        list_map.stub(:list_for_id).and_return(trello_list)
-        list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
+        trello_list_map.stub(:list_for_id).and_return(trello_list)
+        trello_list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
+        redmine_trackers.stub(:area_to_tracker).with(:ideas).and_return(ideas_tracker)
       end
 
       it 'searches among project tickets' do
         subject.run
 
-        expect(Ticket).to have_received(:for_project).twice.with(project.id)
+        expect(Ticket).to have_received(:for_project).with(project.id)
       end
 
       context 'where redmine is more recent' do
@@ -87,18 +92,6 @@ module RoundTrip
 
             expect(recent_redmine.send(from)).to eq(value)
           end
-        end
-
-        it 'gets the Trello list' do
-          subject.run
-
-          expect(list_map).to have_received(:list_for_id).with(recent_redmine.trello_list_id)
-        end
-
-        it 'gets the area for the Trello list' do
-          subject.run
-
-          expect(list_map).to have_received(:list_to_area).with(trello_list)
         end
 
         context 'Redmine issue is' do
@@ -164,16 +157,28 @@ module RoundTrip
           end
         end
 
+        it 'gets the Trello list' do
+          subject.run
+
+          expect(trello_list_map).to have_received(:list_for_id).with(recent_trello.trello_list_id)
+        end
+
+        it 'gets the area for the Trello list' do
+          subject.run
+
+          expect(trello_list_map).to have_received(:list_to_area).with(trello_list)
+        end
+
         context 'Trello card is in' do
           context 'ideas' do
             before do
-              list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
+              trello_list_map.stub(:list_to_area).with(trello_list).and_return(:ideas)
             end
 
             it "sets the tracker to 'Idea'" do
               subject.run
 
-              expect(recent_redmine.tracker_id).to eq('Idea')
+              expect(recent_trello.redmine_tracker_id).to eq(idea_tracker_id)
             end
 
             it 'sets the status to new'
@@ -181,7 +186,20 @@ module RoundTrip
           end
 
           context 'backlog' do
-            it "sets the tracker to 'Feature' if it is set to 'Idea'"
+            let(:feature_tracker_id) { generate(:redmine_tracker_id) }
+            let(:feature_tracker) { double('Redmine::Tracker', id: feature_tracker_id) }
+
+            before do
+            end
+
+            it "sets the tracker to 'Feature' if it is set to 'Idea'" do
+              subject.run
+
+              expect(recent_trello.redmine_tracker_id).to eq(feature_tracker_id)
+            end
+
+            it "leaves the tracker unchanged if it is set to 'Bug'"
+
             it 'sets the status to new'
             it 'unsets the version'
           end

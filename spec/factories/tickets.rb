@@ -1,4 +1,5 @@
 FactoryGirl.define do
+  sequence(:redmine_tracker_id)
   sequence(:trello_id)
   sequence(:trello_list_id)
   sequence(:trello_name)               { |n| "Name #{n}" }
@@ -14,7 +15,7 @@ FactoryGirl.define do
       redmine_project_id              { generate(:redmine_project_id) }
       sequence(:redmine_subject)      { |n| "Subject #{n}" }
       sequence(:redmine_description)  { |n| "Description #{n}" }
-      sequence(:redmine_tracker_id)
+      redmine_tracker_id              { generate(:redmine_tracker_id) }
       sequence(:redmine_status_id)
       redmine_updated_on DateTime.now
     end
