@@ -4,7 +4,7 @@ require 'round_trip/version'
 
 Gem::Specification.new do |s|
   s.name          = 'round_trip'
-  s.summary       = 'Bidirectional sychronisation between Redmine and Trello'
+  s.summary       = 'Bidirectional synchronisation between Redmine and Trello'
   s.description   = <<-EOT
   RoundTrip keeps a Redmine project and a Trello board aligned.
   Cards are created on Trello to match Redmine issues and vice versa.

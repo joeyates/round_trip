@@ -1,7 +1,7 @@
 RoundTrip
 =========
 
-Bidirectional sychronisation between Redmine and Trello tickets.
+Bidirectional synchronisation between Redmine and Trello tickets.
 
 * RoundTrip keeps a Redmine project and a Trello board aligned,
 * Cards are created on Trello to match Redmine issues and vice versa,
