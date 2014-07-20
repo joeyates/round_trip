@@ -31,16 +31,17 @@ module RoundTrip
       ticket.redmine_subject     = ticket.trello_name
       ticket.redmine_description = ticket.trello_description
 
-      list    = trello_list_map.list_for_id(ticket.trello_list_id)
-      area    = trello_list_map.list_to_area(list)
-      tracker = redmine_trackers.area_to_tracker(area)
+      trello_list        = trello_list_map.list_for_id(ticket.trello_list_id)
+      trello_ticket_area = trello_list_map.list_to_area(trello_list)
+      equivalent_redmine_tracker = redmine_trackers.area_to_tracker(trello_ticket_area)
 
-      case area
+      case trello_ticket_area
       when :ideas
-        ticket.redmine_tracker_id = tracker.id
+        ticket.redmine_tracker_id = equivalent_redmine_tracker.id
       when :backlog
-        if redmine_tracker == :ideas
-          ticket.redmine_tracker_id = tracker.id
+        current_redmine_tracker = RoundTrip::Redmine::Tracker.find(ticket.redmine_tracker_id)
+        if current_redmine_tracker.area == :ideas
+          ticket.redmine_tracker_id = equivalent_redmine_tracker.id
         end
       else
         raise 'unhandled area'
